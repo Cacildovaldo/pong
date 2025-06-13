@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pong Betting Game</title>
+  <!-- Favicon - substitua o link abaixo pelo seu favicon -->
+  <link rel="icon" href="https://example.com/pong-favicon.png" type="image/png">
+  <!-- Fonte Google para título do jogo -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  <style>
+    body { 
+      font-family: 'Arial', sans-serif; 
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); 
+      color: #fff; 
+      text-align: center; 
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+    .container { 
+      max-width: 600px; 
+      margin: 0 auto; 
+      padding: 20px; 
+      position: relative;
+      z-index: 1;
+    }
+    .lang-toggle { 
+      position: absolute; 
+      top: 20px; 
+      right: 20px; 
+      z-index: 10;
+    }
+    h1 {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 28px;
+      color: #00bcd4;
+      text-shadow: 0 0 10px rgba(0, 188, 212, 0.7);
+      margin-bottom: 30px;
+      letter-spacing: 1px;
+    }
+    button { 
+      margin: 10px; 
+      padding: 12px 24px; 
+      font-size: 16px; 
+      border: none; 
+      border-radius: 8px; 
+      background: linear-gradient(to right, #00bcd4, #0097a7); 
+      color: white; 
+      cursor: pointer; 
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 8px rgba(0, 188, 212, 0.3);
+    }
+    button:active {
+      transform: translateY(0);
+    }
+    select, input { 
+      padding: 12px; 
+      font-size: 16px; 
+      border-radius: 8px;
+      border: none;
+      background-color: rgba(255, 255, 255, 0.9);
+    }
+    #waitingList { 
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+    #demoCanvas {
+      border-radius: 12px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+      background: #0a0a1a;
+      margin: 20px 0;
+    }
+    .glow {
+      animation: glow 2s infinite alternate;
+    }
+    @keyframes glow {
+      from {
+        box-shadow: 0 0 5px rgba(0, 188, 212, 0.5);
+      }
+      to {
+        box-shadow: 0 0 20px rgba(0, 188, 212, 0.8);
+      }
+    }
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    .hidden {
+      display: none;
+    }
+    .connected {
+      background: linear-gradient(to right, #4CAF50, #2E7D32);
+    }
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+<div class="particles" id="particles"></div>
+<div class="lang-toggle">
+  <select id="languageSelect" onchange="switchLanguage()" class="glow">
+    <option value="en">English</option>
+    <option value="pt">Português</option>
+  </select>
+</div>
+<div class="container">
+  <h1 id="title" class="pulse">Pong Betting Game</h1>
+  <canvas id="demoCanvas" width="400" height="200"></canvas>
+  <button onclick="startPlaySection()" id="playBtn" class="glow">Play</button>
+
+  <div id="playSection" class="hidden">
+    <button onclick="connectWallet()" id="connectBtn">Connect Wallet</button>
+    <select id="betAmount">
+      <option value="10500000">10 USDC</option>
+      <option value="52500000">50 USDC</option>
+      <option value="105000000">100 USDC</option>
+      <option value="1050000000">1000 USDC</option>
+      <option value="10500000000">10,000 USDC</option>
+      <option value="52500000000">50,000 USDC</option>
+      <option value="105000000000">100,000 USDC</option>
+    </select>
+    <button onclick="depositBet()" id="depositBtn">Deposit Bet</button>
+
+    <h3 id="waitingTitle">Waiting Players</h3>
+    <div id="waitingList"></div>
+  </div>
+</div>
+
+<script>
+let provider, signer, contract, isConnected = false;
+const CONTRACT_ADDRESS = "0x43BFA7D787C0D8ee8aC4651c423E3d623Ea53864";
+const CONTRACT_ABI = [
+  {"inputs":[],"stateMutability":"nonpayable","type":"constructor"},
+  {"inputs":[],"name":"USDC","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
+  {"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"depositBet","outputs":[],"stateMutability":"nonpayable","type":"function"},
+  {"inputs":[{"internalType":"address","name":"opponent","type":"address"}],"name":"challengePlayer","outputs":[],"stateMutability":"nonpayable","type":"function"},
+  {"inputs":[{"internalType":"address","name":"loser","type":"address"}],"name":"declareWinner","outputs":[],"stateMutability":"nonpayable","type":"function"},
+  {"inputs":[],"name":"withdrawBet","outputs":[],"stateMutability":"nonpayable","type":"function"},
+  {"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"getWaitingPlayers","outputs":[{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function"},
+  {"inputs":[{"internalType":"address","name":"player","type":"address"}],"name":"getGame","outputs":[{"components":[{"internalType":"address","name":"player1","type":"address"},{"internalType":"address","name":"player2","type":"address"},{"internalType":"uint256","name":"betAmount","type":"uint256"},{"internalType":"bool","name":"active","type":"bool"}],"internalType":"struct PongBetGame.Game","name":"","type":"tuple"}],"stateMutability":"view","type":"function"}
+];
+
+async function connectWallet() {
+  try {
+    if (!window.ethereum) {
+      alert("Please install MetaMask or another Web3 wallet!");
+      return;
+    }
+    
+    provider = new ethers.providers.Web3Provider(window.ethereum);
+    await provider.send("eth_requestAccounts", []);
+    signer = provider.getSigner();
+    contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+    
+    const connectBtn = document.getElementById("connectBtn");
+    connectBtn.classList.add("connected");
+    connectBtn.innerText = "Connected ✔";
+    isConnected = true;
+    
+    document.getElementById("depositBtn").disabled = false;
+    updateWaitingPlayers();
+    
+    window.ethereum.on('accountsChanged', (accounts) => {
+      if (accounts.length === 0) {
+        connectBtn.classList.remove("connected");
+        connectBtn.innerText = "Connect Wallet";
+        isConnected = false;
+        document.getElementById("depositBtn").disabled = true;
+      } else {
+        updateWaitingPlayers();
+      }
+    });
+  } catch (error) {
+    console.error("Error connecting wallet:", error);
+    alert("Error connecting wallet: " + error.message);
+  }
+}
+
+async function depositBet() {
+  if (!isConnected) {
+    alert("Please connect your wallet first!");
+    return;
+  }
+  
+  try {
+    const amount = document.getElementById("betAmount").value;
+    const usdcAddress = await contract.USDC();
+    const usdcAbi = ["function approve(address spender, uint256 amount)"];
+    const usdc = new ethers.Contract(usdcAddress, usdcAbi, signer);
+    
+    const depositBtn = document.getElementById("depositBtn");
+    const originalText = depositBtn.innerText;
+    depositBtn.innerText = "Processing...";
+    depositBtn.disabled = true;
+    
+    const approveTx = await usdc.approve(CONTRACT_ADDRESS, amount);
+    await approveTx.wait();
+    
+    const tx = await contract.depositBet(amount);
+    await tx.wait();
+    
+    depositBtn.innerText = "Deposit Successful!";
+    setTimeout(() => {
+      depositBtn.innerText = originalText;
+      depositBtn.disabled = false;
+    }, 2000);
+    
+    updateWaitingPlayers();
+  } catch (error) {
+    console.error("Error depositing bet:", error);
+    alert("Error depositing bet: " + (error.message || error));
+    document.getElementById("depositBtn").innerText = "Deposit Bet";
+    document.getElementById("depositBtn").disabled = false;
+  }
+}
+
+async function updateWaitingPlayers() {
+  if (!isConnected) return;
+  
+  try {
+    const amount = document.getElementById("betAmount").value;
+    const players = await contract.getWaitingPlayers(amount);
+    const list = document.getElementById("waitingList");
+    list.innerHTML = "";
+    
+    if (players.length === 0) {
+      list.innerHTML = "<p>No players waiting for this bet amount</p>";
+      return;
+    }
+    
+    players.forEach(addr => {
+      const short = `${addr.substring(0, 6)}...${addr.substring(38)}`;
+      const btn = document.createElement("button");
+      btn.innerText = `Challenge ${short}`;
+      btn.onclick = () => challenge(addr);
+      btn.classList.add("glow");
+      list.appendChild(btn);
+    });
+  } catch (error) {
+    console.error("Error updating waiting players:", error);
+  }
+}
+
+async function challenge(addr) {
+  if (!isConnected) {
+    alert("Please connect your wallet first!");
+    return;
+  }
+  
+  try {
+    const tx = await contract.challengePlayer(addr);
+    await tx.wait();
+    alert("Challenge sent! The game can now begin.");
+  } catch (error) {
+    console.error("Error challenging player:", error);
+    alert("Error challenging player: " + error.message);
+  }
+}
+
+function startPlaySection() {
+  document.getElementById("playSection").classList.remove("hidden");
+  document.getElementById("playBtn").classList.add("hidden");
+}
+
+function switchLanguage() {
+  const lang = document.getElementById("languageSelect").value;
+  document.getElementById("title").innerText = lang === "pt" ? "Jogo de Apostas Pong" : "Pong Betting Game";
+  document.getElementById("playBtn").innerText = lang === "pt" ? "Jogar" : "Play";
+  document.getElementById("connectBtn").innerText = isConnected ? (lang === "pt" ? "Conectado ✔" : "Connected ✔") : (lang === "pt" ? "Conectar Carteira" : "Connect Wallet");
+  document.getElementById("depositBtn").innerText = lang === "pt" ? "Depositar Aposta" : "Deposit Bet";
+  document.getElementById("waitingTitle").innerText = lang === "pt" ? "Jogadores Aguardando" : "Waiting Players";
+}
+
+const canvas = document.getElementById("demoCanvas");
+const ctx = canvas.getContext("2d");
+let ball = { x: 200, y: 100, vx: 3, vy: 3, r: 10 };
+let paddleLeft = { x: 20, y: 80, width: 10, height: 60 };
+let paddleRight = { x: 370, y: 80, width: 10, height: 60 };
+
+function drawPaddle(x, y, width, height) {
+  ctx.fillStyle = "#00bcd4";
+  ctx.shadowBlur = 15;
+  ctx.shadowColor = "#00bcd4";
+  ctx.beginPath();
+  ctx.roundRect(x, y, width, height, 5);
+  ctx.fill();
+  ctx.shadowBlur = 0;
+}
+
+function demoGame() {
+  ctx.fillStyle = "rgba(10, 10, 26, 0.2)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  
+  ctx.strokeStyle = "rgba(0, 188, 212, 0.3)";
+  ctx.setLineDash([5, 10]);
+  ctx.beginPath();
+  ctx.moveTo(canvas.width/2, 0);
+  ctx.lineTo(canvas.width/2, canvas.height);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  
+  ctx.fillStyle = "#00bcd4";
+  ctx.shadowBlur = 10;
+  ctx.shadowColor = "#00bcd4";
+  ctx.beginPath();
+  ctx.arc(ball.x, ball.y, ball.r, 0, 2 * Math.PI);
+  ctx.fill();
+  ctx.shadowBlur = 0;
+  
+  drawPaddle(paddleLeft.x, paddleLeft.y, paddleLeft.width, paddleLeft.height);
+  drawPaddle(paddleRight.x, paddleRight.y, paddleRight.width, paddleRight.height);
+  
+  ball.x += ball.vx; 
+  ball.y += ball.vy;
+  
+  if(ball.y < ball.r || ball.y > canvas.height - ball.r) {
+    ball.vy *= -1;
+    canvas.classList.add("glow");
+    setTimeout(() => canvas.classList.remove("glow"), 200);
+  }
+  
+  paddleLeft.y += (ball.y - (paddleLeft.y + paddleLeft.height/2)) * 0.1;
+  paddleRight.y += (ball.y - (paddleRight.y + paddleRight.height/2)) * 0.1;
+  
+  paddleLeft.y = Math.max(0, Math.min(canvas.height - paddleLeft.height, paddleLeft.y));
+  paddleRight.y = Math.max(0, Math.min(canvas.height - paddleRight.height, paddleRight.y));
+  
+  if (ball.x - ball.r < paddleLeft.x + paddleLeft.width && 
+      ball.y > paddleLeft.y && ball.y < paddleLeft.y + paddleLeft.height) {
+    ball.vx *= -1;
+    ball.x = paddleLeft.x + paddleLeft.width + ball.r;
+  }
+  
+  if (ball.x + ball.r > paddleRight.x && 
+      ball.y > paddleRight.y && ball.y < paddleRight.y + paddleRight.height) {
+    ball.vx *= -1;
+    ball.x = paddleRight.x - ball.r;
+  }
+  
+  if(ball.x < 0 || ball.x > canvas.width) {
+    ball.x = canvas.width/2;
+    ball.y = canvas.height/2;
+    ball.vx *= -1;
+    ball.vy = (Math.random() > 0.5 ? 1 : -1) * 3;
+  }
+  
+  requestAnimationFrame(demoGame);
+}
+
+demoGame();
+
+function createParticles() {
+  const particlesContainer = document.getElementById('particles');
+  const particleCount = 50;
+  
+  for (let i = 0; i < particleCount; i++) {
+    const particle = document.createElement('div');
+    particle.style.position = 'absolute';
+    particle.style.width = `${Math.random() * 5 + 1}px`;
+    particle.style.height = particle.style.width;
+    particle.style.backgroundColor = 'rgba(0, 188, 212, 0.5)';
+    particle.style.borderRadius = '50%';
+    particle.style.left = `${Math.random() * 100}%`;
+    particle.style.top = `${Math.random() * 100}%`;
+    particle.style.opacity = Math.random() * 0.5 + 0.1;
+    
+    const duration = Math.random() * 20 + 10;
+    particle.style.animation = `float ${duration}s linear infinite`;
+    
+    const keyframes = `
+      @keyframes float {
+        0% {
+          transform: translate(0, 0);
+        }
+        50% {
+          transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px);
+        }
+        100% {
+          transform: translate(0, 0);
+        }
+      }
+    `;
+    
+    const style = document.createElement('style');
+    style.innerHTML = keyframes;
+    document.head.appendChild(style);
+    
+    particlesContainer.appendChild(particle);
+  }
+}
+
+window.onload = function() {
+  createParticles();
+  document.getElementById("depositBtn").disabled = true;
+};
+</script>
+</body>
+</html>
