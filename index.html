@@ -1,108 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- [Todo o cabeçalho original...] -->
-  <!-- Adicione APENAS esta linha no <head>: -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pong Betting Game</title>
+  <link rel="icon" href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEirKCQgq-yQkH-K9-msV1c9bfA8AJxGOBYhDwtrABslz_RpgGropi1HUfy2OLPWJmX7VgyzvOJwqOPG3bvCJmIzu25OtZQtBU8iD77N53Ai05wtUMClB23kagVa7j2iF4EQcD1y-EuU-mc2BP_X6u8EQWhpk_XwEaZDVRuEzMd1-E8oraSsx0twEDX909M/s320/pong.png" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    /* [Cole AQUI todo o conteúdo da tag <style> da sua página original] */
+    body { 
+      font-family: 'Arial', sans-serif; 
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); 
+      color: #fff; 
+      text-align: center; 
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+    .container { 
+      max-width: 600px; 
+      margin: 0 auto; 
+      padding: 20px; 
+      position: relative;
+      z-index: 1;
+    }
+    /* ... [continue com todos os estilos originais] ... */
+  </style>
 </head>
 <body>
-  <!-- [Todo o corpo original...] -->
-
-  <!-- Adicione APENAS esta seção antes do share-section -->
-  <div id="realGameSection" class="hidden">
-    <div class="game-container">
-      <div class="score-display">
-        <span id="player1Score">0</span>
-        <span id="player2Score">0</span>
-      </div>
-      <div class="game-status" id="gameStatus">Waiting for opponent...</div>
-      <canvas id="gameCanvas" width="400" height="400"></canvas>
-    </div>
-    <div class="player-info">
-      <p>You are: <span id="playerPosition">-</span></p>
-      <p>Opponent: <span id="opponentAddress">-</span></p>
-      <p>Bet Amount: <span id="currentBet">0</span> USDC</p>
-    </div>
-    <button id="leaveGameBtn" onclick="leaveGame()">Leave Game</button>
+<div class="particles" id="particles"></div>
+<div class="lang-toggle">
+  <select id="languageSelect" onchange="switchLanguage()" class="glow">
+    <option value="en">English</option>
+    <option value="pt">Português</option>
+  </select>
+</div>
+<div class="container">
+  <h1 id="title" class="pulse">Pong Betting Game</h1>
+  
+  <div id="gameInfoEn" class="game-info">
+    <h2>About the Game</h2>
+    <ul>
+      <li>Classic Pong game with cryptocurrency betting</li>
+      <li>Players deposit USDC to challenge others</li>
+      <li>5% fee is deducted from the loser's bet</li>
+    </ul>
   </div>
+  
+  <canvas id="demoCanvas" width="400" height="200"></canvas>
 
-  <!-- [Restante do corpo original...] -->
+  <div id="playSection">
+    <button onclick="connectWallet()" id="connectBtn">Connect Wallet</button>
+    <select id="betAmount">
+      <option value="10500000">10 USDC</option>
+      <option value="52500000">50 USDC</option>
+      <option value="105000000">100 USDC</option>
+    </select>
+    <button onclick="depositBet()" id="depositBtn">Deposit Bet</button>
 
-  <script>
-  // Adicione APENAS estas variáveis no início do <script>:
-  let socket;
-  let currentGame = null;
-  let playerNumber = null;
-  const SOCKET_SERVER_URL = "https://pong-server-9007.onrender.com";
+    <h3 id="waitingTitle">Waiting Players</h3>
+    <div id="waitingList"></div>
+  </div>
+</div>
 
-  // Adicione APENAS estas funções NO FINAL do <script> (antes do demoGame()):
-  function initSocket() {
-    socket = io(SOCKET_SERVER_URL);
-    socket.on('game_start', (data) => startGame(data.player1, data.player2, data.betAmount));
-    socket.on('game_state', updateGameState);
-    socket.on('game_over', endGame);
-  }
+<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+<script>
+// [Cole AQUI todo o conteúdo do <script> da sua página original]
+// Adicione estas variáveis no início:
+const SOCKET_SERVER_URL = "https://pong-server-9007.onrender.com";
+let socket;
 
-  function startGame(p1, p2, betAmount) {
-    currentGame = { player1: p1, player2: p2, betAmount };
-    playerNumber = playerAddress.toLowerCase() === p1.toLowerCase() ? 1 : 2;
-    
-    document.getElementById('demoCanvas').style.display = 'none';
-    document.getElementById('playSection').classList.add('hidden');
-    document.getElementById('realGameSection').classList.remove('hidden');
-    
-    document.getElementById('playerPosition').textContent = playerNumber === 1 ? 'Left' : 'Right';
-    document.getElementById('opponentAddress').textContent = playerNumber === 1 ? 
-      `${p2.substring(0, 6)}...${p2.substring(38)}` : `${p1.substring(0, 6)}...${p1.substring(38)}`;
-    document.getElementById('currentBet').textContent = (betAmount / 1000000).toFixed(0);
-    
-    const canvas = document.getElementById('gameCanvas');
-    canvas.style.display = 'block';
-    canvas.addEventListener('mousemove', (e) => {
-      const rect = canvas.getBoundingClientRect();
-      const y = e.clientY - rect.top;
-      socket.emit('player_move', { gameId: `${p1}-${p2}`, yPosition: y });
-    });
-  }
+// Adicione esta função após connectWallet():
+function initSocket() {
+  socket = io(SOCKET_SERVER_URL);
+  socket.on('connect', () => console.log('Connected to game server'));
+}
 
-  function updateGameState(state) {
-    document.getElementById('player1Score').textContent = state.score1;
-    document.getElementById('player2Score').textContent = state.score2;
-    
-    const canvas = document.getElementById('gameCanvas');
-    const ctx = canvas.getContext('2d');
-    ctx.fillStyle = '#0a0a1a';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    ctx.fillStyle = '#00bcd4';
-    ctx.beginPath();
-    ctx.arc(state.ball.x, state.ball.y, state.ball.r, 0, Math.PI * 2);
-    ctx.fill();
-    
-    ctx.fillStyle = playerNumber === 1 ? '#4CAF50' : '#00bcd4';
-    ctx.fillRect(20, state.paddle1.y, 10, 60);
-    ctx.fillStyle = playerNumber === 2 ? '#4CAF50' : '#00bcd4';
-    ctx.fillRect(370, state.paddle2.y, 10, 60);
-  }
-
-  function endGame(winner) {
-    const isWinner = winner.toLowerCase() === playerAddress.toLowerCase();
-    document.getElementById('gameStatus').textContent = isWinner ? 'You won!' : 'You lost!';
-    setTimeout(leaveGame, 3000);
-  }
-
-  function leaveGame() {
-    document.getElementById('realGameSection').classList.add('hidden');
-    document.getElementById('playSection').classList.remove('hidden');
-    document.getElementById('demoCanvas').style.display = 'block';
-  }
-
-  // Modifique a função connectWallet() para incluir isto no final:
-  async function connectWallet() {
-    // [Código original...]
-    playerAddress = await signer.getAddress();
+// Modifique connectWallet():
+async function connectWallet() {
+  try {
+    if (!window.ethereum) {
+      alert("Please install MetaMask!");
+      return;
+    }
+    provider = new ethers.providers.Web3Provider(window.ethereum);
+    await provider.send("eth_requestAccounts", []);
+    signer = provider.getSigner();
     initSocket(); // Adicione esta linha
+    
+    // ... [restante do código original]
+  } catch (error) {
+    console.error("Error:", error);
   }
-  </script>
+}
+</script>
 </body>
 </html>
