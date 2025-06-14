@@ -9,6 +9,8 @@
   <link rel="icon" href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEirKCQgq-yQkH-K9-msV1c9bfA8AJxGOBYhDwtrABslz_RpgGropi1HUfy2OLPWJmX7VgyzvOJwqOPG3bvCJmIzu25OtZQtBU8iD77N53Ai05wtUMClB23kagVa7j2iF4EQcD1y-EuU-mc2BP_X6u8EQWhpk_XwEaZDVRuEzMd1-E8oraSsx0twEDX909M/s320/pong.png" type="image/png">
   <!-- Fonte Google para título do jogo -->
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <!-- Ícones para botões de compartilhamento -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
   <style>
     body { 
@@ -133,6 +135,43 @@
     .game-info li {
       margin-bottom: 8px;
     }
+    .share-section {
+      margin-top: 30px;
+      padding: 20px 0;
+      border-top: 1px solid rgba(0, 188, 212, 0.3);
+    }
+    .share-title {
+      margin-bottom: 15px;
+      color: #00bcd4;
+      font-size: 18px;
+    }
+    .share-buttons {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .share-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 18px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .share-btn:hover {
+      transform: translateY(-3px) scale(1.1);
+    }
+    .twitter { background: #1DA1F2; }
+    .facebook { background: #4267B2; }
+    .instagram { background: #E1306C; }
+    .reddit { background: #FF5700; }
+    .telegram { background: #0088CC; }
+    .whatsapp { background: #25D366; }
   </style>
 </head>
 <body>
@@ -169,9 +208,8 @@
   </div>
   
   <canvas id="demoCanvas" width="400" height="200"></canvas>
-  <button onclick="startPlaySection()" id="playBtn" class="glow">Play</button>
 
-  <div id="playSection" class="hidden">
+  <div id="playSection">
     <button onclick="connectWallet()" id="connectBtn">Connect Wallet</button>
     <select id="betAmount">
       <option value="10500000">10 USDC</option>
@@ -186,6 +224,31 @@
 
     <h3 id="waitingTitle">Waiting Players</h3>
     <div id="waitingList"></div>
+  </div>
+  
+  <!-- Seção de compartilhamento -->
+  <div class="share-section">
+    <div class="share-title" id="shareTitle">Share this game:</div>
+    <div class="share-buttons">
+      <div class="share-btn twitter" onclick="shareOnTwitter()">
+        <i class="fab fa-twitter"></i>
+      </div>
+      <div class="share-btn facebook" onclick="shareOnFacebook()">
+        <i class="fab fa-facebook-f"></i>
+      </div>
+      <div class="share-btn instagram" onclick="shareOnInstagram()">
+        <i class="fab fa-instagram"></i>
+      </div>
+      <div class="share-btn reddit" onclick="shareOnReddit()">
+        <i class="fab fa-reddit-alien"></i>
+      </div>
+      <div class="share-btn telegram" onclick="shareOnTelegram()">
+        <i class="fab fa-telegram-plane"></i>
+      </div>
+      <div class="share-btn whatsapp" onclick="shareOnWhatsApp()">
+        <i class="fab fa-whatsapp"></i>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -202,6 +265,40 @@ const CONTRACT_ABI = [
   {"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"getWaitingPlayers","outputs":[{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function"},
   {"inputs":[{"internalType":"address","name":"player","type":"address"}],"name":"getGame","outputs":[{"components":[{"internalType":"address","name":"player1","type":"address"},{"internalType":"address","name":"player2","type":"address"},{"internalType":"uint256","name":"betAmount","type":"uint256"},{"internalType":"bool","name":"active","type":"bool"}],"internalType":"struct PongBetGame.Game","name":"","type":"tuple"}],"stateMutability":"view","type":"function"}
 ];
+
+// Funções de compartilhamento
+function shareOnTwitter() {
+  const url = encodeURIComponent(window.location.href);
+  const text = encodeURIComponent("Check out this awesome Pong Betting Game on Polygon network! 🎮💰 #Web3 #CryptoGaming");
+  window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+}
+
+function shareOnFacebook() {
+  const url = encodeURIComponent(window.location.href);
+  window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+}
+
+function shareOnInstagram() {
+  alert("To share on Instagram, copy the link and paste it in your story or post!");
+}
+
+function shareOnReddit() {
+  const url = encodeURIComponent(window.location.href);
+  const title = encodeURIComponent("Pong Betting Game on Polygon");
+  window.open(`https://www.reddit.com/submit?url=${url}&title=${title}`, '_blank');
+}
+
+function shareOnTelegram() {
+  const url = encodeURIComponent(window.location.href);
+  const text = encodeURIComponent("Check out this Pong Betting Game on Polygon network!");
+  window.open(`https://t.me/share/url?url=${url}&text=${text}`, '_blank');
+}
+
+function shareOnWhatsApp() {
+  const url = encodeURIComponent(window.location.href);
+  const text = encodeURIComponent("Check out this Pong Betting Game on Polygon network!");
+  window.open(`https://wa.me/?text=${text}%20${url}`, '_blank');
+}
 
 async function connectWallet() {
   try {
@@ -320,20 +417,14 @@ async function challenge(addr) {
   }
 }
 
-function startPlaySection() {
-  document.getElementById("playSection").classList.remove("hidden");
-  document.getElementById("playBtn").classList.add("hidden");
-}
-
 function switchLanguage() {
   const lang = document.getElementById("languageSelect").value;
   document.getElementById("title").innerText = lang === "pt" ? "Jogo de Apostas Pong" : "Pong Betting Game";
-  document.getElementById("playBtn").innerText = lang === "pt" ? "Jogar" : "Play";
   document.getElementById("connectBtn").innerText = isConnected ? (lang === "pt" ? "Conectado ✔" : "Connected ✔") : (lang === "pt" ? "Conectar Carteira" : "Connect Wallet");
   document.getElementById("depositBtn").innerText = lang === "pt" ? "Depositar Aposta" : "Deposit Bet";
   document.getElementById("waitingTitle").innerText = lang === "pt" ? "Jogadores Aguardando" : "Waiting Players";
+  document.getElementById("shareTitle").innerText = lang === "pt" ? "Compartilhe este jogo:" : "Share this game:";
   
-  // Mostra/oculta as informações do jogo conforme o idioma selecionado
   if (lang === "pt") {
     document.getElementById("gameInfoEn").classList.add("hidden");
     document.getElementById("gameInfoPt").classList.remove("hidden");
@@ -464,10 +555,10 @@ function createParticles() {
 window.onload = function() {
   createParticles();
   document.getElementById("depositBtn").disabled = true;
-  switchLanguage(); // Garante que as informações corretas sejam mostradas no carregamento
+  switchLanguage();
 };
 </script>
-      <!-- Histats.com  START  (aync)-->
+<!-- Histats.com  START  (aync)-->
 <script type="text/javascript">var _Hasync= _Hasync|| [];
 _Hasync.push(['Histats.start', '1,4956842,4,0,0,0,00010000']);
 _Hasync.push(['Histats.fasi', '1']);
