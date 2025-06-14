@@ -114,6 +114,25 @@
       z-index: 0;
       pointer-events: none;
     }
+    .game-info {
+      background: rgba(10, 10, 26, 0.7);
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 20px;
+      text-align: left;
+      border: 1px solid rgba(0, 188, 212, 0.3);
+    }
+    .game-info h2 {
+      color: #00bcd4;
+      margin-top: 0;
+      font-size: 18px;
+    }
+    .game-info ul {
+      padding-left: 20px;
+    }
+    .game-info li {
+      margin-bottom: 8px;
+    }
   </style>
 </head>
 <body>
@@ -126,6 +145,29 @@
 </div>
 <div class="container">
   <h1 id="title" class="pulse">Pong Betting Game</h1>
+  
+  <div id="gameInfoEn" class="game-info">
+    <h2>About the Game</h2>
+    <ul>
+      <li>Classic Pong game with cryptocurrency betting on Polygon network</li>
+      <li>Players deposit USDC to challenge others with matching bets</li>
+      <li>5% fee is deducted from the loser's bet (winner gets 95% of the total pot)</li>
+      <li>Only compatible with Polygon network - make sure your wallet is connected to Polygon</li>
+      <li>Winner is determined by the first player to reach 11 points</li>
+    </ul>
+  </div>
+  
+  <div id="gameInfoPt" class="game-info hidden">
+    <h2>Sobre o Jogo</h2>
+    <ul>
+      <li>Jogo Pong clássico com apostas em criptomoedas na rede Polygon</li>
+      <li>Jogadores depositam USDC para desafiar outros com apostas equivalentes</li>
+      <li>Taxa de 5% é deduzida da aposta do perdedor (vencedor recebe 95% do valor total)</li>
+      <li>Somente compatível com a rede Polygon - certifique-se que sua carteira está conectada à Polygon</li>
+      <li>Vencedor é determinado pelo primeiro jogador que atingir 11 pontos</li>
+    </ul>
+  </div>
+  
   <canvas id="demoCanvas" width="400" height="200"></canvas>
   <button onclick="startPlaySection()" id="playBtn" class="glow">Play</button>
 
@@ -290,6 +332,15 @@ function switchLanguage() {
   document.getElementById("connectBtn").innerText = isConnected ? (lang === "pt" ? "Conectado ✔" : "Connected ✔") : (lang === "pt" ? "Conectar Carteira" : "Connect Wallet");
   document.getElementById("depositBtn").innerText = lang === "pt" ? "Depositar Aposta" : "Deposit Bet";
   document.getElementById("waitingTitle").innerText = lang === "pt" ? "Jogadores Aguardando" : "Waiting Players";
+  
+  // Mostra/oculta as informações do jogo conforme o idioma selecionado
+  if (lang === "pt") {
+    document.getElementById("gameInfoEn").classList.add("hidden");
+    document.getElementById("gameInfoPt").classList.remove("hidden");
+  } else {
+    document.getElementById("gameInfoEn").classList.remove("hidden");
+    document.getElementById("gameInfoPt").classList.add("hidden");
+  }
 }
 
 const canvas = document.getElementById("demoCanvas");
@@ -413,6 +464,7 @@ function createParticles() {
 window.onload = function() {
   createParticles();
   document.getElementById("depositBtn").disabled = true;
+  switchLanguage(); // Garante que as informações corretas sejam mostradas no carregamento
 };
 </script>
       <!-- Histats.com  START  (aync)-->
