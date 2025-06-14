@@ -1,260 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta name="google-site-verification" content="L4FtNz0XjN1oBZQ2B157lpF7FW1pdwmU9eTlclK_33Y" />
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pong Betting Game</title>
-  <!-- Favicon - substitua o link abaixo pelo seu favicon -->
-  <link rel="icon" href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEirKCQgq-yQkH-K9-msV1c9bfA8AJxGOBYhDwtrABslz_RpgGropi1HUfy2OLPWJmX7VgyzvOJwqOPG3bvCJmIzu25OtZQtBU8iD77N53Ai05wtUMClB23kagVa7j2iF4EQcD1y-EuU-mc2BP_X6u8EQWhpk_XwEaZDVRuEzMd1-E8oraSsx0twEDX909M/s320/pong.png" type="image/png">
-  <!-- Fonte Google para título do jogo -->
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-  <!-- Ícones para botões de compartilhamento -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <!-- (Manter todo o cabeçalho existente até a linha 134) -->
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
   <style>
-    body { 
-      font-family: 'Arial', sans-serif; 
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); 
-      color: #fff; 
-      text-align: center; 
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-    }
-    .container { 
-      max-width: 600px; 
-      margin: 0 auto; 
-      padding: 20px; 
+    /* (Adicionar estilos novos no final da tag style, antes do </head>) */
+    .game-container {
       position: relative;
-      z-index: 1;
+      margin: 20px auto;
     }
-    .lang-toggle { 
-      position: absolute; 
-      top: 20px; 
-      right: 20px; 
-      z-index: 10;
-    }
-    h1 {
-      font-family: 'Press Start 2P', cursive;
-      font-size: 28px;
-      color: #00bcd4;
-      text-shadow: 0 0 10px rgba(0, 188, 212, 0.7);
-      margin-bottom: 30px;
-      letter-spacing: 1px;
-    }
-    button { 
-      margin: 10px; 
-      padding: 12px 24px; 
-      font-size: 16px; 
-      border: none; 
-      border-radius: 8px; 
-      background: linear-gradient(to right, #00bcd4, #0097a7); 
-      color: white; 
-      cursor: pointer; 
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 8px rgba(0, 188, 212, 0.3);
-    }
-    button:active {
-      transform: translateY(0);
-    }
-    select, input { 
-      padding: 12px; 
-      font-size: 16px; 
-      border-radius: 8px;
-      border: none;
-      background-color: rgba(255, 255, 255, 0.9);
-    }
-    #waitingList { 
-      margin-top: 20px;
+    .score-display {
       display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
+      justify-content: space-between;
+      width: 400px;
+      margin: 0 auto;
+      font-family: 'Press Start 2P', cursive;
+      font-size: 24px;
+      color: #00bcd4;
     }
-    #demoCanvas {
+    .game-status {
+      margin: 10px 0;
+      font-size: 18px;
+      color: #00bcd4;
+    }
+    #gameCanvas {
       border-radius: 12px;
       box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
       background: #0a0a1a;
-      margin: 20px 0;
+      display: none; /* Inicialmente oculto */
+      margin: 0 auto;
     }
-    .glow {
-      animation: glow 2s infinite alternate;
-    }
-    @keyframes glow {
-      from {
-        box-shadow: 0 0 5px rgba(0, 188, 212, 0.5);
-      }
-      to {
-        box-shadow: 0 0 20px rgba(0, 188, 212, 0.8);
-      }
-    }
-    .pulse {
-      animation: pulse 2s infinite;
-    }
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-      100% { transform: scale(1); }
-    }
-    .hidden {
-      display: none;
-    }
-    .connected {
-      background: linear-gradient(to right, #4CAF50, #2E7D32);
-    }
-    .particles {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      pointer-events: none;
-    }
-    .game-info {
+    .player-info {
       background: rgba(10, 10, 26, 0.7);
-      border-radius: 12px;
-      padding: 15px;
-      margin-bottom: 20px;
-      text-align: left;
-      border: 1px solid rgba(0, 188, 212, 0.3);
+      border-radius: 8px;
+      padding: 10px;
+      margin: 10px 0;
     }
-    .game-info h2 {
-      color: #00bcd4;
-      margin-top: 0;
-      font-size: 18px;
-    }
-    .game-info ul {
-      padding-left: 20px;
-    }
-    .game-info li {
-      margin-bottom: 8px;
-    }
-    .share-section {
-      margin-top: 30px;
-      padding: 20px 0;
-      border-top: 1px solid rgba(0, 188, 212, 0.3);
-    }
-    .share-title {
-      margin-bottom: 15px;
-      color: #00bcd4;
-      font-size: 18px;
-    }
-    .share-buttons {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .share-btn {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 18px;
-      transition: all 0.3s ease;
-      cursor: pointer;
-    }
-    .share-btn:hover {
-      transform: translateY(-3px) scale(1.1);
-    }
-    .twitter { background: #1DA1F2; }
-    .facebook { background: #4267B2; }
-    .instagram { background: #E1306C; }
-    .reddit { background: #FF5700; }
-    .telegram { background: #0088CC; }
-    .whatsapp { background: #25D366; }
   </style>
 </head>
 <body>
-<div class="particles" id="particles"></div>
-<div class="lang-toggle">
-  <select id="languageSelect" onchange="switchLanguage()" class="glow">
-    <option value="en">English</option>
-    <option value="pt">Português</option>
-  </select>
-</div>
-<div class="container">
-  <h1 id="title" class="pulse">Pong Betting Game</h1>
-  
-  <div id="gameInfoEn" class="game-info">
-    <h2>About the Game</h2>
-    <ul>
-      <li>Classic Pong game with cryptocurrency betting on Polygon network</li>
-      <li>Players deposit USDC to challenge others with matching bets</li>
-      <li>5% fee is deducted from the loser's bet (winner gets 100% of the total pot)</li>
-      <li>Only compatible with Polygon network - make sure your wallet is connected to Polygon</li>
-      <li>Winner is determined by the first player to reach 1 point</li>
-    </ul>
-  </div>
-  
-  <div id="gameInfoPt" class="game-info hidden">
-    <h2>Sobre o Jogo</h2>
-    <ul>
-      <li>Jogo Pong clássico com apostas em criptomoedas na rede Polygon</li>
-      <li>Jogadores depositam USDC para desafiar outros com apostas equivalentes</li>
-      <li>Taxa de 5% é deduzida da aposta do perdedor (vencedor recebe 100% do valor total)</li>
-      <li>Somente compatível com a rede Polygon - certifique-se que sua carteira está conectada à Polygon</li>
-      <li>Vencedor é determinado pelo primeiro jogador que atingir 1 ponto</li>
-    </ul>
-  </div>
-  
-  <canvas id="demoCanvas" width="400" height="200"></canvas>
+<!-- (Manter todo o corpo existente até a seção de compartilhamento) -->
 
-  <div id="playSection">
-    <button onclick="connectWallet()" id="connectBtn">Connect Wallet</button>
-    <select id="betAmount">
-      <option value="10500000">10 USDC</option>
-      <option value="52500000">50 USDC</option>
-      <option value="105000000">100 USDC</option>
-      <option value="1050000000">1000 USDC</option>
-      <option value="10500000000">10,000 USDC</option>
-      <option value="52500000000">50,000 USDC</option>
-      <option value="105000000000">100,000 USDC</option>
-    </select>
-    <button onclick="depositBet()" id="depositBtn">Deposit Bet</button>
-
-    <h3 id="waitingTitle">Waiting Players</h3>
-    <div id="waitingList"></div>
-  </div>
-  
-  <!-- Seção de compartilhamento -->
-  <div class="share-section">
-    <div class="share-title" id="shareTitle">Share this game:</div>
-    <div class="share-buttons">
-      <div class="share-btn twitter" onclick="shareOnTwitter()">
-        <i class="fab fa-twitter"></i>
-      </div>
-      <div class="share-btn facebook" onclick="shareOnFacebook()">
-        <i class="fab fa-facebook-f"></i>
-      </div>
-      <div class="share-btn instagram" onclick="shareOnInstagram()">
-        <i class="fab fa-instagram"></i>
-      </div>
-      <div class="share-btn reddit" onclick="shareOnReddit()">
-        <i class="fab fa-reddit-alien"></i>
-      </div>
-      <div class="share-btn telegram" onclick="shareOnTelegram()">
-        <i class="fab fa-telegram-plane"></i>
-      </div>
-      <div class="share-btn whatsapp" onclick="shareOnWhatsApp()">
-        <i class="fab fa-whatsapp"></i>
-      </div>
+<!-- Adicionar esta seção antes do share-section -->
+<div id="realGameSection" class="hidden">
+  <div class="game-container">
+    <div class="score-display">
+      <span id="player1Score">0</span>
+      <span id="player2Score">0</span>
     </div>
+    <div class="game-status" id="gameStatus">Waiting for opponent...</div>
+    <canvas id="gameCanvas" width="400" height="400"></canvas>
   </div>
+  <div class="player-info">
+    <p>You are: <span id="playerPosition">-</span></p>
+    <p>Opponent: <span id="opponentAddress">-</span></p>
+    <p>Bet Amount: <span id="currentBet">0</span> USDC</p>
+  </div>
+  <button id="leaveGameBtn" onclick="leaveGame()">Leave Game</button>
 </div>
+
+<!-- (Manter o restante do corpo existente) -->
 
 <script>
+// Configurações atualizadas
 let provider, signer, contract, isConnected = false;
-const CONTRACT_ADDRESS = "0x43BFA7D787C0D8ee8aC4651c423E3d623Ea53864";
+let socket;
+let currentGame = null;
+let playerAddress = null;
+let playerNumber = null;
+let gameInterval = null;
+
+// Contrato atualizado
+const CONTRACT_ADDRESS = "0x7228FC125EF5b4598315CEc74c37C16Fb2100447";
 const CONTRACT_ABI = [
   {"inputs":[],"stateMutability":"nonpayable","type":"constructor"},
   {"inputs":[],"name":"USDC","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
@@ -263,198 +81,78 @@ const CONTRACT_ABI = [
   {"inputs":[{"internalType":"address","name":"loser","type":"address"}],"name":"declareWinner","outputs":[],"stateMutability":"nonpayable","type":"function"},
   {"inputs":[],"name":"withdrawBet","outputs":[],"stateMutability":"nonpayable","type":"function"},
   {"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"getWaitingPlayers","outputs":[{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function"},
-  {"inputs":[{"internalType":"address","name":"player","type":"address"}],"name":"getGame","outputs":[{"components":[{"internalType":"address","name":"player1","type":"address"},{"internalType":"address","name":"player2","type":"address"},{"internalType":"uint256","name":"betAmount","type":"uint256"},{"internalType":"bool","name":"active","type":"bool"}],"internalType":"struct PongBetGame.Game","name":"","type":"tuple"}],"stateMutability":"view","type":"function"}
+  {"inputs":[{"internalType":"address","name":"player","type":"address"}],"name":"getGame","outputs":[{"components":[{"internalType":"address","name":"player1","type":"address"},{"internalType":"address","name":"player2","type":"address"},{"internalType":"uint256","name":"betAmount","type":"uint256"},{"internalType":"bool","name":"active","type":"bool"},{"internalType":"bool","name":"gameEnded","type":"bool"},{"internalType":"address","name":"winner","type":"address"}],"internalType":"struct PongBetGame.Game","name":"","type":"tuple"}],"stateMutability":"view","type":"function"}
 ];
 
-// Funções de compartilhamento
-function shareOnTwitter() {
-  const url = encodeURIComponent(window.location.href);
-  const text = encodeURIComponent("Check out this awesome Pong Betting Game on Polygon network! 🎮💰 #Web3 #CryptoGaming");
-  window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
-}
+// URL do servidor Socket.io (você vai substituir pelo seu depois)
+const SOCKET_SERVER_URL = "https://pong-game-server.onrender.com";
 
-function shareOnFacebook() {
-  const url = encodeURIComponent(window.location.href);
-  window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
-}
+// Inicializar Socket.io
+function initSocket() {
+  socket = io(SOCKET_SERVER_URL, {
+    reconnection: true,
+    reconnectionAttempts: 5,
+    reconnectionDelay: 1000
+  });
 
-function shareOnInstagram() {
-  alert("To share on Instagram, copy the link and paste it in your story or post!");
-}
-
-function shareOnReddit() {
-  const url = encodeURIComponent(window.location.href);
-  const title = encodeURIComponent("Pong Betting Game on Polygon");
-  window.open(`https://www.reddit.com/submit?url=${url}&title=${title}`, '_blank');
-}
-
-function shareOnTelegram() {
-  const url = encodeURIComponent(window.location.href);
-  const text = encodeURIComponent("Check out this Pong Betting Game on Polygon network!");
-  window.open(`https://t.me/share/url?url=${url}&text=${text}`, '_blank');
-}
-
-function shareOnWhatsApp() {
-  const url = encodeURIComponent(window.location.href);
-  const text = encodeURIComponent("Check out this Pong Betting Game on Polygon network!");
-  window.open(`https://wa.me/?text=${text}%20${url}`, '_blank');
-}
-
-async function connectWallet() {
-  try {
-    if (!window.ethereum) {
-      alert("Please install MetaMask or another Web3 wallet!");
-      return;
+  socket.on('connect', () => {
+    console.log('Connected to game server');
+    if (playerAddress) {
+      socket.emit('register', playerAddress);
     }
-    
-    provider = new ethers.providers.Web3Provider(window.ethereum);
-    await provider.send("eth_requestAccounts", []);
-    signer = provider.getSigner();
-    contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
-    
-    const connectBtn = document.getElementById("connectBtn");
-    connectBtn.classList.add("connected");
-    connectBtn.innerText = "Connected ✔";
-    isConnected = true;
-    
-    document.getElementById("depositBtn").disabled = false;
-    updateWaitingPlayers();
-    
-    window.ethereum.on('accountsChanged', (accounts) => {
-      if (accounts.length === 0) {
-        connectBtn.classList.remove("connected");
-        connectBtn.innerText = "Connect Wallet";
-        isConnected = false;
-        document.getElementById("depositBtn").disabled = true;
-      } else {
-        updateWaitingPlayers();
-      }
-    });
-  } catch (error) {
-    console.error("Error connecting wallet:", error);
-    alert("Error connecting wallet: " + error.message);
-  }
+  });
+
+  socket.on('game_start', (data) => {
+    startGame(data.player1, data.player2, data.betAmount);
+  });
+
+  socket.on('game_state', (state) => {
+    updateGameState(state);
+  });
+
+  socket.on('game_over', (winner) => {
+    endGame(winner);
+  });
 }
 
-async function depositBet() {
-  if (!isConnected) {
-    alert("Please connect your wallet first!");
-    return;
-  }
+// Funções do jogo (adicionar após as funções existentes)
+function startGame(player1, player2, betAmount) {
+  currentGame = { player1, player2, betAmount };
+  playerNumber = playerAddress.toLowerCase() === player1.toLowerCase() ? 1 : 2;
   
-  try {
-    const amount = document.getElementById("betAmount").value;
-    const usdcAddress = await contract.USDC();
-    const usdcAbi = ["function approve(address spender, uint256 amount)"];
-    const usdc = new ethers.Contract(usdcAddress, usdcAbi, signer);
-    
-    const depositBtn = document.getElementById("depositBtn");
-    const originalText = depositBtn.innerText;
-    depositBtn.innerText = "Processing...";
-    depositBtn.disabled = true;
-    
-    const approveTx = await usdc.approve(CONTRACT_ADDRESS, amount);
-    await approveTx.wait();
-    
-    const tx = await contract.depositBet(amount);
-    await tx.wait();
-    
-    depositBtn.innerText = "Deposit Successful!";
-    setTimeout(() => {
-      depositBtn.innerText = originalText;
-      depositBtn.disabled = false;
-    }, 2000);
-    
-    updateWaitingPlayers();
-  } catch (error) {
-    console.error("Error depositing bet:", error);
-    alert("Error depositing bet: " + (error.message || error));
-    document.getElementById("depositBtn").innerText = "Deposit Bet";
-    document.getElementById("depositBtn").disabled = false;
-  }
-}
-
-async function updateWaitingPlayers() {
-  if (!isConnected) return;
+  // Esconder demonstração e mostrar jogo real
+  document.getElementById('demoCanvas').style.display = 'none';
+  document.getElementById('playSection').classList.add('hidden');
+  document.getElementById('realGameSection').classList.remove('hidden');
   
-  try {
-    const amount = document.getElementById("betAmount").value;
-    const players = await contract.getWaitingPlayers(amount);
-    const list = document.getElementById("waitingList");
-    list.innerHTML = "";
-    
-    if (players.length === 0) {
-      list.innerHTML = "<p>No players waiting for this bet amount</p>";
-      return;
-    }
-    
-    players.forEach(addr => {
-      const short = `${addr.substring(0, 6)}...${addr.substring(38)}`;
-      const btn = document.createElement("button");
-      btn.innerText = `Challenge ${short}`;
-      btn.onclick = () => challenge(addr);
-      btn.classList.add("glow");
-      list.appendChild(btn);
-    });
-  } catch (error) {
-    console.error("Error updating waiting players:", error);
-  }
-}
-
-async function challenge(addr) {
-  if (!isConnected) {
-    alert("Please connect your wallet first!");
-    return;
-  }
+  document.getElementById('playerPosition').textContent = playerNumber === 1 ? 'Left' : 'Right';
+  document.getElementById('opponentAddress').textContent = playerNumber === 1 ? 
+    shortenAddress(player2) : shortenAddress(player1);
+  document.getElementById('currentBet').textContent = (betAmount / 1000000).toFixed(0);
   
-  try {
-    const tx = await contract.challengePlayer(addr);
-    await tx.wait();
-    alert("Challenge sent! The game can now begin.");
-  } catch (error) {
-    console.error("Error challenging player:", error);
-    alert("Error challenging player: " + error.message);
-  }
-}
-
-function switchLanguage() {
-  const lang = document.getElementById("languageSelect").value;
-  document.getElementById("title").innerText = lang === "pt" ? "Jogo de Apostas Pong" : "Pong Betting Game";
-  document.getElementById("connectBtn").innerText = isConnected ? (lang === "pt" ? "Conectado ✔" : "Connected ✔") : (lang === "pt" ? "Conectar Carteira" : "Connect Wallet");
-  document.getElementById("depositBtn").innerText = lang === "pt" ? "Depositar Aposta" : "Deposit Bet";
-  document.getElementById("waitingTitle").innerText = lang === "pt" ? "Jogadores Aguardando" : "Waiting Players";
-  document.getElementById("shareTitle").innerText = lang === "pt" ? "Compartilhe este jogo:" : "Share this game:";
+  // Iniciar canvas do jogo
+  const canvas = document.getElementById('gameCanvas');
+  canvas.style.display = 'block';
+  canvas.addEventListener('mousemove', handlePaddleMove);
   
-  if (lang === "pt") {
-    document.getElementById("gameInfoEn").classList.add("hidden");
-    document.getElementById("gameInfoPt").classList.remove("hidden");
-  } else {
-    document.getElementById("gameInfoEn").classList.remove("hidden");
-    document.getElementById("gameInfoPt").classList.add("hidden");
-  }
+  // Notificar servidor que estamos prontos
+  socket.emit('player_ready', { gameId: `${player1}-${player2}` });
 }
 
-const canvas = document.getElementById("demoCanvas");
-const ctx = canvas.getContext("2d");
-let ball = { x: 200, y: 100, vx: 3, vy: 3, r: 10 };
-let paddleLeft = { x: 20, y: 80, width: 10, height: 60 };
-let paddleRight = { x: 370, y: 80, width: 10, height: 60 };
-
-function drawPaddle(x, y, width, height) {
-  ctx.fillStyle = "#00bcd4";
-  ctx.shadowBlur = 15;
-  ctx.shadowColor = "#00bcd4";
-  ctx.beginPath();
-  ctx.roundRect(x, y, width, height, 5);
-  ctx.fill();
-  ctx.shadowBlur = 0;
-}
-
-function demoGame() {
-  ctx.fillStyle = "rgba(10, 10, 26, 0.2)";
+function updateGameState(state) {
+  // Atualizar placar
+  document.getElementById('player1Score').textContent = state.score1;
+  document.getElementById('player2Score').textContent = state.score2;
+  
+  // Desenhar estado do jogo
+  const canvas = document.getElementById('gameCanvas');
+  const ctx = canvas.getContext('2d');
+  
+  ctx.fillStyle = '#0a0a1a';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   
-  ctx.strokeStyle = "rgba(0, 188, 212, 0.3)";
+  // Desenhar linha central
+  ctx.strokeStyle = 'rgba(0, 188, 212, 0.3)';
   ctx.setLineDash([5, 10]);
   ctx.beginPath();
   ctx.moveTo(canvas.width/2, 0);
@@ -462,114 +160,83 @@ function demoGame() {
   ctx.stroke();
   ctx.setLineDash([]);
   
-  ctx.fillStyle = "#00bcd4";
-  ctx.shadowBlur = 10;
-  ctx.shadowColor = "#00bcd4";
+  // Desenhar bola
+  ctx.fillStyle = '#00bcd4';
   ctx.beginPath();
-  ctx.arc(ball.x, ball.y, ball.r, 0, 2 * Math.PI);
+  ctx.arc(state.ball.x, state.ball.y, state.ball.r, 0, Math.PI * 2);
   ctx.fill();
-  ctx.shadowBlur = 0;
   
-  drawPaddle(paddleLeft.x, paddleLeft.y, paddleLeft.width, paddleLeft.height);
-  drawPaddle(paddleRight.x, paddleRight.y, paddleRight.width, paddleRight.height);
+  // Desenhar raquetes
+  ctx.fillStyle = playerNumber === 1 ? '#4CAF50' : '#00bcd4';
+  ctx.fillRect(20, state.paddle1.y, 10, state.paddle1.height);
   
-  ball.x += ball.vx; 
-  ball.y += ball.vy;
-  
-  if(ball.y < ball.r || ball.y > canvas.height - ball.r) {
-    ball.vy *= -1;
-    canvas.classList.add("glow");
-    setTimeout(() => canvas.classList.remove("glow"), 200);
-  }
-  
-  paddleLeft.y += (ball.y - (paddleLeft.y + paddleLeft.height/2)) * 0.1;
-  paddleRight.y += (ball.y - (paddleRight.y + paddleRight.height/2)) * 0.1;
-  
-  paddleLeft.y = Math.max(0, Math.min(canvas.height - paddleLeft.height, paddleLeft.y));
-  paddleRight.y = Math.max(0, Math.min(canvas.height - paddleRight.height, paddleRight.y));
-  
-  if (ball.x - ball.r < paddleLeft.x + paddleLeft.width && 
-      ball.y > paddleLeft.y && ball.y < paddleLeft.y + paddleLeft.height) {
-    ball.vx *= -1;
-    ball.x = paddleLeft.x + paddleLeft.width + ball.r;
-  }
-  
-  if (ball.x + ball.r > paddleRight.x && 
-      ball.y > paddleRight.y && ball.y < paddleRight.y + paddleRight.height) {
-    ball.vx *= -1;
-    ball.x = paddleRight.x - ball.r;
-  }
-  
-  if(ball.x < 0 || ball.x > canvas.width) {
-    ball.x = canvas.width/2;
-    ball.y = canvas.height/2;
-    ball.vx *= -1;
-    ball.vy = (Math.random() > 0.5 ? 1 : -1) * 3;
-  }
-  
-  requestAnimationFrame(demoGame);
+  ctx.fillStyle = playerNumber === 2 ? '#4CAF50' : '#00bcd4';
+  ctx.fillRect(canvas.width - 30, state.paddle2.y, 10, state.paddle2.height);
 }
 
-demoGame();
-
-function createParticles() {
-  const particlesContainer = document.getElementById('particles');
-  const particleCount = 50;
+function handlePaddleMove(e) {
+  if (!currentGame || !playerNumber) return;
   
-  for (let i = 0; i < particleCount; i++) {
-    const particle = document.createElement('div');
-    particle.style.position = 'absolute';
-    particle.style.width = `${Math.random() * 5 + 1}px`;
-    particle.style.height = particle.style.width;
-    particle.style.backgroundColor = 'rgba(0, 188, 212, 0.5)';
-    particle.style.borderRadius = '50%';
-    particle.style.left = `${Math.random() * 100}%`;
-    particle.style.top = `${Math.random() * 100}%`;
-    particle.style.opacity = Math.random() * 0.5 + 0.1;
+  const canvas = document.getElementById('gameCanvas');
+  const rect = canvas.getBoundingClientRect();
+  const y = e.clientY - rect.top;
+  
+  socket.emit('player_move', {
+    gameId: `${currentGame.player1}-${currentGame.player2}`,
+    yPosition: y
+  });
+}
+
+function endGame(winner) {
+  const isWinner = winner.toLowerCase() === playerAddress.toLowerCase();
+  const statusEl = document.getElementById('gameStatus');
+  
+  if (isWinner) {
+    statusEl.textContent = 'You won! Prize will be distributed automatically.';
+    statusEl.style.color = '#4CAF50';
+  } else {
+    statusEl.textContent = 'You lost. Better luck next time!';
+    statusEl.style.color = '#f44336';
+  }
+  
+  setTimeout(() => {
+    leaveGame();
+  }, 5000);
+}
+
+function leaveGame() {
+  if (currentGame) {
+    socket.emit('leave_game', { gameId: `${currentGame.player1}-${currentGame.player2}` });
+    currentGame = null;
+  }
+  
+  document.getElementById('realGameSection').classList.add('hidden');
+  document.getElementById('playSection').classList.remove('hidden');
+  document.getElementById('demoCanvas').style.display = 'block';
+  document.getElementById('gameCanvas').style.display = 'none';
+}
+
+// Atualizar connectWallet para incluir initSocket
+async function connectWallet() {
+  try {
+    // ... (código existente)
     
-    const duration = Math.random() * 20 + 10;
-    particle.style.animation = `float ${duration}s linear infinite`;
+    playerAddress = await signer.getAddress();
+    initSocket(); // Adicionar esta linha
     
-    const keyframes = `
-      @keyframes float {
-        0% {
-          transform: translate(0, 0);
-        }
-        50% {
-          transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px);
-        }
-        100% {
-          transform: translate(0, 0);
-        }
-      }
-    `;
-    
-    const style = document.createElement('style');
-    style.innerHTML = keyframes;
-    document.head.appendChild(style);
-    
-    particlesContainer.appendChild(particle);
+    // ... (restante do código existente)
+  } catch (error) {
+    console.error("Error connecting wallet:", error);
+    alert("Error connecting wallet: " + error.message);
   }
 }
 
-window.onload = function() {
-  createParticles();
-  document.getElementById("depositBtn").disabled = true;
-  switchLanguage();
-};
+// Função auxiliar para encurtar endereços
+function shortenAddress(address) {
+  return `${address.substring(0, 6)}...${address.substring(38)}`;
+}
+
+// (Manter todas as outras funções existentes)
 </script>
-<!-- Histats.com  START  (aync)-->
-<script type="text/javascript">var _Hasync= _Hasync|| [];
-_Hasync.push(['Histats.start', '1,4956842,4,0,0,0,00010000']);
-_Hasync.push(['Histats.fasi', '1']);
-_Hasync.push(['Histats.track_hits', '']);
-(function() {
-var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
-hs.src = ('//s10.histats.com/js15_as.js');
-(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
-})();</script>
-<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4956842&101" alt="" border="0"></a></noscript>
-<!-- Histats.com  END  -->
 </body>
-  System under maintenance. We will be up and running soon.
 </html>
