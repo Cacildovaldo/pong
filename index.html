@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta name="google-site-verification" content="L4FtNz0XjN1oBZQ2B157lpF7FW1pdwmU9eTlclK_33Y" />
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pong Betting Game</title>
   <link rel="icon" href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEirKCQgq-yQkH-K9-msV1c9bfA8AJxGOBYhDwtrABslz_RpgGropi1HUfy2OLPWJmX7VgyzvOJwqOPG3bvCJmIzu25OtZQtBU8iD77N53Ai05wtUMClB23kagVa7j2iF4EQcD1y-EuU-mc2BP_X6u8EQWhpk_XwEaZDVRuEzMd1-E8oraSsx0twEDX909M/s320/pong.png" type="image/png">
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
   <style>
     body { 
       font-family: 'Arial', sans-serif; 
@@ -24,49 +27,83 @@
       position: relative;
       z-index: 1;
     }
+    .lang-toggle { 
+      position: absolute; 
+      top: 20px; 
+      right: 20px; 
+      z-index: 10;
+    }
     h1 {
       font-family: 'Press Start 2P', cursive;
       font-size: 28px;
       color: #00bcd4;
       text-shadow: 0 0 10px rgba(0, 188, 212, 0.7);
       margin-bottom: 30px;
+      letter-spacing: 1px;
     }
     button { 
+      margin: 10px; 
+      padding: 12px 24px; 
+      font-size: 16px; 
+      border: none; 
+      border-radius: 8px; 
       background: linear-gradient(to right, #00bcd4, #0097a7); 
       color: white; 
-      padding: 12px 24px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      margin: 10px;
-      font-size: 16px;
-      transition: all 0.3s;
+      cursor: pointer; 
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
     button:hover {
       transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(0, 188, 212, 0.4);
+      box-shadow: 0 6px 8px rgba(0, 188, 212, 0.3);
     }
-    button:disabled {
-      background: #cccccc;
-      cursor: not-allowed;
+    button:active {
+      transform: translateY(0);
     }
-    select {
-      padding: 12px;
+    select, input { 
+      padding: 12px; 
+      font-size: 16px; 
       border-radius: 8px;
-      font-size: 16px;
-      margin: 10px;
+      border: none;
+      background-color: rgba(255, 255, 255, 0.9);
+    }
+    #waitingList { 
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
     }
     #demoCanvas {
-      background: #0a0a1a;
       border-radius: 12px;
-      margin: 20px auto;
-      display: block;
       box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+      background: #0a0a1a;
+      margin: 20px 0;
     }
-    #transactionStatus {
-      margin: 15px 0;
-      color: #00bcd4;
-      min-height: 20px;
+    .glow {
+      animation: glow 2s infinite alternate;
+    }
+    @keyframes glow {
+      from {
+        box-shadow: 0 0 5px rgba(0, 188, 212, 0.5);
+      }
+      to {
+        box-shadow: 0 0 20px rgba(0, 188, 212, 0.8);
+      }
+    }
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    .hidden {
+      display: none;
+    }
+    .connected {
+      background: linear-gradient(to right, #4CAF50, #2E7D32);
     }
     .particles {
       position: fixed;
@@ -77,12 +114,101 @@
       z-index: 0;
       pointer-events: none;
     }
+    .game-info {
+      background: rgba(10, 10, 26, 0.7);
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 20px;
+      text-align: left;
+      border: 1px solid rgba(0, 188, 212, 0.3);
+    }
+    .game-info h2 {
+      color: #00bcd4;
+      margin-top: 0;
+      font-size: 18px;
+    }
+    .game-info ul {
+      padding-left: 20px;
+    }
+    .game-info li {
+      margin-bottom: 8px;
+    }
+    .share-section {
+      margin-top: 30px;
+      padding: 20px 0;
+      border-top: 1px solid rgba(0, 188, 212, 0.3);
+    }
+    .share-title {
+      margin-bottom: 15px;
+      color: #00bcd4;
+      font-size: 18px;
+    }
+    .share-buttons {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .share-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 18px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .share-btn:hover {
+      transform: translateY(-3px) scale(1.1);
+    }
+    .twitter { background: #1DA1F2; }
+    .facebook { background: #4267B2; }
+    .instagram { background: #E1306C; }
+    .reddit { background: #FF5700; }
+    .telegram { background: #0088CC; }
+    .whatsapp { background: #25D366; }
+    #transactionStatus {
+      margin: 15px 0;
+      color: #00bcd4;
+      min-height: 20px;
+    }
   </style>
 </head>
 <body>
 <div class="particles" id="particles"></div>
+<div class="lang-toggle">
+  <select id="languageSelect" onchange="switchLanguage()" class="glow">
+    <option value="en">English</option>
+    <option value="pt">Português</option>
+  </select>
+</div>
 <div class="container">
-  <h1>Pong Betting Game</h1>
+  <h1 id="title" class="pulse">Pong Betting Game</h1>
+  
+  <div id="gameInfoEn" class="game-info">
+    <h2>About the Game</h2>
+    <ul>
+      <li>Classic Pong game with cryptocurrency betting on Polygon network</li>
+      <li>Players deposit USDC to challenge others with matching bets</li>
+      <li>5% fee is deducted from the loser's bet (winner gets 100% of the total pot)</li>
+      <li>Only compatible with Polygon network - make sure your wallet is connected to Polygon</li>
+      <li>Winner is determined by the first player to reach 1 point</li>
+    </ul>
+  </div>
+  
+  <div id="gameInfoPt" class="game-info hidden">
+    <h2>Sobre o Jogo</h2>
+    <ul>
+      <li>Jogo Pong clássico com apostas em criptomoedas na rede Polygon</li>
+      <li>Jogadores depositam USDC para desafiar outros com apostas equivalentes</li>
+      <li>Taxa de 5% é deduzida da aposta do perdedor (vencedor recebe 100% do valor total)</li>
+      <li>Somente compatível com a rede Polygon - certifique-se que sua carteira está conectada à Polygon</li>
+      <li>Vencedor é determinado pelo primeiro jogador que atingir 1 ponto</li>
+    </ul>
+  </div>
   
   <canvas id="demoCanvas" width="400" height="200"></canvas>
 
@@ -94,153 +220,53 @@
       <option value="105000000">100 USDC</option>
       <option value="1050000000">1000 USDC</option>
       <option value="10500000000">10,000 USDC</option>
+      <option value="52500000000">50,000 USDC</option>
+      <option value="105000000000">100,000 USDC</option>
     </select>
     <button id="depositBtn" disabled>Deposit Bet</button>
     <div id="transactionStatus"></div>
+
+    <h3 id="waitingTitle">Waiting Players</h3>
     <div id="waitingList"></div>
+  </div>
+  
+  <div class="share-section">
+    <div class="share-title" id="shareTitle">Share this game:</div>
+    <div class="share-buttons">
+      <div class="share-btn twitter" onclick="shareOnTwitter()">
+        <i class="fab fa-twitter"></i>
+      </div>
+      <div class="share-btn facebook" onclick="shareOnFacebook()">
+        <i class="fab fa-facebook-f"></i>
+      </div>
+      <div class="share-btn instagram" onclick="shareOnInstagram()">
+        <i class="fab fa-instagram"></i>
+      </div>
+      <div class="share-btn reddit" onclick="shareOnReddit()">
+        <i class="fab fa-reddit-alien"></i>
+      </div>
+      <div class="share-btn telegram" onclick="shareOnTelegram()">
+        <i class="fab fa-telegram-plane"></i>
+      </div>
+      <div class="share-btn whatsapp" onclick="shareOnWhatsApp()">
+        <i class="fab fa-whatsapp"></i>
+      </div>
+    </div>
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
 <script>
 // Configurações do Contrato
 const CONTRACT_ADDRESS = "0x7228FC125EF5b4598315CEc74c37C16Fb2100447";
 const CONTRACT_ABI = [
-  {
-    "inputs": [],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
-  {
-    "inputs": [],
-    "name": "USDC",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "depositBet",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "opponent",
-        "type": "address"
-      }
-    ],
-    "name": "challengePlayer",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "loser",
-        "type": "address"
-      }
-    ],
-    "name": "declareWinner",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "withdrawBet",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "getWaitingPlayers",
-    "outputs": [
-      {
-        "internalType": "address[]",
-        "name": "",
-        "type": "address[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "player",
-        "type": "address"
-      }
-    ],
-    "name": "getGame",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "address",
-            "name": "player1",
-            "type": "address"
-          },
-          {
-            "internalType": "address",
-            "name": "player2",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "betAmount",
-            "type": "uint256"
-          },
-          {
-            "internalType": "bool",
-            "name": "active",
-            "type": "bool"
-          },
-          {
-            "internalType": "bool",
-            "name": "gameEnded",
-            "type": "bool"
-          },
-          {
-            "internalType": "address",
-            "name": "winner",
-            "type": "address"
-          }
-        ],
-        "internalType": "struct PongBetGame.Game",
-        "name": "",
-        "type": "tuple"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  }
+  {"inputs":[],"stateMutability":"nonpayable","type":"constructor"},
+  {"inputs":[],"name":"USDC","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
+  {"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"depositBet","outputs":[],"stateMutability":"nonpayable","type":"function"},
+  {"inputs":[{"internalType":"address","name":"opponent","type":"address"}],"name":"challengePlayer","outputs":[],"stateMutability":"nonpayable","type":"function"},
+  {"inputs":[{"internalType":"address","name":"loser","type":"address"}],"name":"declareWinner","outputs":[],"stateMutability":"nonpayable","type":"function"},
+  {"inputs":[],"name":"withdrawBet","outputs":[],"stateMutability":"nonpayable","type":"function"},
+  {"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"getWaitingPlayers","outputs":[{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function"},
+  {"inputs":[{"internalType":"address","name":"player","type":"address"}],"name":"getGame","outputs":[{"components":[{"internalType":"address","name":"player1","type":"address"},{"internalType":"address","name":"player2","type":"address"},{"internalType":"uint256","name":"betAmount","type":"uint256"},{"internalType":"bool","name":"active","type":"bool"},{"internalType":"bool","name":"gameEnded","type":"bool"},{"internalType":"address","name":"winner","type":"address"}],"internalType":"struct PongBetGame.Game","name":"","type":"tuple"}],"stateMutability":"view","type":"function"}
 ];
 
 // Variáveis globais
@@ -262,11 +288,9 @@ function initDemoGame() {
   let paddleRight = { y: 80, height: 60 };
 
   function draw() {
-    // Limpar canvas
     ctx.fillStyle = 'rgba(10, 10, 26, 0.2)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
-    // Desenhar linha central
     ctx.strokeStyle = 'rgba(0, 188, 212, 0.3)';
     ctx.setLineDash([5, 10]);
     ctx.beginPath();
@@ -275,38 +299,74 @@ function initDemoGame() {
     ctx.stroke();
     ctx.setLineDash([]);
     
-    // Desenhar bolinha
     ctx.fillStyle = '#00bcd4';
     ctx.beginPath();
     ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI*2);
     ctx.fill();
     
-    // Desenhar raquetes
     ctx.fillStyle = '#00bcd4';
     ctx.fillRect(20, paddleLeft.y, 10, paddleLeft.height);
     ctx.fillRect(370, paddleRight.y, 10, paddleRight.height);
     
-    // Movimento da bola
     ball.x += ball.vx;
     ball.y += ball.vy;
     
-    // Colisão com paredes
     if(ball.y < ball.r || ball.y > canvas.height - ball.r) {
       ball.vy *= -1;
+      canvas.classList.add("glow");
+      setTimeout(() => canvas.classList.remove("glow"), 200);
     }
     
-    // Movimento das raquetes (CPU)
     paddleLeft.y += (ball.y - (paddleLeft.y + paddleLeft.height/2)) * 0.1;
     paddleRight.y += (ball.y - (paddleRight.y + paddleRight.height/2)) * 0.1;
     
-    // Limitar movimento das raquetes
     paddleLeft.y = Math.max(0, Math.min(canvas.height - paddleLeft.height, paddleLeft.y));
     paddleRight.y = Math.max(0, Math.min(canvas.height - paddleRight.height, paddleRight.y));
+    
+    if(ball.x < 0 || ball.x > canvas.width) {
+      ball.x = canvas.width/2;
+      ball.y = canvas.height/2;
+      ball.vx *= -1;
+    }
     
     requestAnimationFrame(draw);
   }
   
   draw();
+}
+
+// Funções de compartilhamento
+function shareOnTwitter() {
+  const url = encodeURIComponent(window.location.href);
+  const text = encodeURIComponent("Check out this awesome Pong Betting Game on Polygon network! 🎮💰 #Web3 #CryptoGaming");
+  window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+}
+
+function shareOnFacebook() {
+  const url = encodeURIComponent(window.location.href);
+  window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+}
+
+function shareOnInstagram() {
+  alert("To share on Instagram, copy the link and paste it in your story or post!");
+}
+
+function shareOnReddit() {
+  const url = encodeURIComponent(window.location.href);
+  const title = encodeURIComponent("Pong Betting Game on Polygon");
+  window.open(`https://www.reddit.com/submit?url=${url}&title=${title}`, '_blank');
+}
+
+function shareOnTelegram() {
+  const url = encodeURIComponent(window.location.href);
+  const text = encodeURIComponent("Check out this Pong Betting Game on Polygon network!");
+  window.open(`https://t.me/share/url?url=${url}&text=${text}`, '_blank');
+}
+
+function shareOnWhatsApp() {
+  const url = encodeURIComponent(window.location.href);
+  const text = encodeURIComponent("Check out this Pong Betting Game on Polygon network!");
+  window.open(`https://wa.me/?text=${text}%20${url}`, '_blank');
 }
 
 // Conexão com Carteira
@@ -323,11 +383,25 @@ async function connectWallet() {
     signer = provider.getSigner();
     contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
     
+    connectBtn.classList.add("connected");
     connectBtn.textContent = "Connected ✔";
     depositBtn.disabled = false;
     updateStatus("Wallet connected successfully!");
     
     initSocketConnection();
+    updateWaitingPlayers();
+    
+    window.ethereum.on('accountsChanged', (accounts) => {
+      if (accounts.length === 0) {
+        connectBtn.classList.remove("connected");
+        connectBtn.textContent = "Connect Wallet";
+        depositBtn.disabled = true;
+        updateStatus("Wallet disconnected");
+      } else {
+        updateStatus("Account changed - refreshing...");
+        location.reload();
+      }
+    });
     
   } catch (error) {
     console.error("Wallet connection error:", error);
@@ -376,21 +450,10 @@ async function depositBet() {
   }
 }
 
-// Socket.io Connection
-function initSocketConnection() {
-  socket = io(SOCKET_SERVER_URL);
-  
-  socket.on('connect', () => {
-    updateStatus("Connected to game server");
-  });
-  
-  socket.on('game_start', (data) => {
-    updateStatus(`Game started with ${data.betAmount/1e6} USDC bet`);
-  });
-}
-
 // Atualizar lista de jogadores
 async function updateWaitingPlayers() {
+  if (!contract) return;
+  
   try {
     const amount = document.getElementById('betAmount').value;
     const players = await contract.getWaitingPlayers(amount);
@@ -404,6 +467,7 @@ async function updateWaitingPlayers() {
       const btn = document.createElement('button');
       btn.textContent = `Challenge ${player.substring(0, 6)}...`;
       btn.onclick = () => challengePlayer(player);
+      btn.classList.add("glow");
       listDiv.appendChild(btn);
     });
   } catch (error) {
@@ -423,19 +487,48 @@ async function challengePlayer(opponent) {
   }
 }
 
+// Socket.io Connection
+function initSocketConnection() {
+  socket = io(SOCKET_SERVER_URL);
+  
+  socket.on('connect', () => {
+    updateStatus("Connected to game server");
+  });
+  
+  socket.on('game_start', (data) => {
+    updateStatus(`Game started with ${data.betAmount/1e6} USDC bet`);
+  });
+}
+
 // Atualizar status
 function updateStatus(text) {
   statusDiv.textContent = text;
   console.log(text);
 }
 
-// Inicialização
-window.onload = function() {
-  initDemoGame();
-  connectBtn.addEventListener('click', connectWallet);
-  depositBtn.addEventListener('click', depositBet);
+// Trocar idioma
+function switchLanguage() {
+  const lang = document.getElementById("languageSelect").value;
+  document.getElementById("title").textContent = lang === "pt" ? "Jogo de Apostas Pong" : "Pong Betting Game";
+  document.getElementById("connectBtn").textContent = lang === "pt" ? 
+    (connectBtn.classList.contains("connected") ? "Conectado ✔" : "Conectar Carteira") : 
+    (connectBtn.classList.contains("connected") ? "Connected ✔" : "Connect Wallet");
+  document.getElementById("depositBtn").textContent = lang === "pt" ? "Depositar Aposta" : "Deposit Bet";
+  document.getElementById("waitingTitle").textContent = lang === "pt" ? "Jogadores Aguardando" : "Waiting Players";
+  document.getElementById("shareTitle").textContent = lang === "pt" ? "Compartilhe este jogo:" : "Share this game:";
   
-  // Efeito de partículas
+  if (lang === "pt") {
+    document.getElementById("gameInfoEn").classList.add("hidden");
+    document.getElementById("gameInfoPt").classList.remove("hidden");
+  } else {
+    document.getElementById("gameInfoEn").classList.remove("hidden");
+    document.getElementById("gameInfoPt").classList.add("hidden");
+  }
+}
+
+// Efeito de partículas
+function createParticles() {
+  const particlesContainer = document.getElementById('particles');
   for (let i = 0; i < 50; i++) {
     const particle = document.createElement('div');
     particle.style.cssText = `
@@ -448,8 +541,18 @@ window.onload = function() {
       top: ${Math.random() * 100}%;
       animation: float ${Math.random() * 20 + 10}s linear infinite;
     `;
-    document.getElementById('particles').appendChild(particle);
+    particlesContainer.appendChild(particle);
   }
+}
+
+// Inicialização
+window.onload = function() {
+  createParticles();
+  initDemoGame();
+  switchLanguage();
+  
+  connectBtn.addEventListener('click', connectWallet);
+  depositBtn.addEventListener('click', depositBet);
 };
 </script>
 </body>
