@@ -8,7 +8,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
-    /* [Cole AQUI todo o conteúdo da tag <style> da sua página original] */
     body { 
       font-family: 'Arial', sans-serif; 
       background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); 
@@ -25,76 +24,96 @@
       position: relative;
       z-index: 1;
     }
-    /* ... [continue com todos os estilos originais] ... */
+    h1 {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 28px;
+      color: #00bcd4;
+      text-shadow: 0 0 10px rgba(0, 188, 212, 0.7);
+      margin-bottom: 30px;
+    }
+    button { 
+      background: linear-gradient(to right, #00bcd4, #0097a7); 
+      color: white; 
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 10px;
+    }
+    #demoCanvas {
+      background: #0a0a1a;
+      border-radius: 12px;
+      margin: 20px auto;
+      display: block;
+    }
+    /* [Adicione todos os outros estilos da sua versão original aqui] */
   </style>
 </head>
 <body>
-<div class="particles" id="particles"></div>
-<div class="lang-toggle">
-  <select id="languageSelect" onchange="switchLanguage()" class="glow">
-    <option value="en">English</option>
-    <option value="pt">Português</option>
-  </select>
-</div>
 <div class="container">
-  <h1 id="title" class="pulse">Pong Betting Game</h1>
-  
-  <div id="gameInfoEn" class="game-info">
-    <h2>About the Game</h2>
-    <ul>
-      <li>Classic Pong game with cryptocurrency betting</li>
-      <li>Players deposit USDC to challenge others</li>
-      <li>5% fee is deducted from the loser's bet</li>
-    </ul>
-  </div>
+  <h1>Pong Betting Game</h1>
   
   <canvas id="demoCanvas" width="400" height="200"></canvas>
 
   <div id="playSection">
-    <button onclick="connectWallet()" id="connectBtn">Connect Wallet</button>
+    <button id="connectBtn">Connect Wallet</button>
     <select id="betAmount">
       <option value="10500000">10 USDC</option>
       <option value="52500000">50 USDC</option>
       <option value="105000000">100 USDC</option>
+      <option value="1050000000">1000 USDC</option>
     </select>
-    <button onclick="depositBet()" id="depositBtn">Deposit Bet</button>
-
-    <h3 id="waitingTitle">Waiting Players</h3>
-    <div id="waitingList"></div>
+    <button id="depositBtn">Deposit Bet</button>
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
 <script>
-// [Cole AQUI todo o conteúdo do <script> da sua página original]
-// Adicione estas variáveis no início:
-const SOCKET_SERVER_URL = "https://pong-server-9007.onrender.com";
-let socket;
+// Configurações do Contrato
+const CONTRACT_ADDRESS = "0x7228FC125EF5b4598315CEc74c37C16Fb2100447";
+const CONTRACT_ABI = [
+  {"inputs":[],"stateMutability":"nonpayable","type":"constructor"},
+  {"inputs":[],"name":"USDC","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
+  {"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"depositBet","outputs":[],"stateMutability":"nonpayable","type":"function"},
+  {"inputs":[{"internalType":"address","name":"opponent","type":"address"}],"name":"challengePlayer","outputs":[],"stateMutability":"nonpayable","type":"function"},
+  {"inputs":[{"internalType":"address","name":"loser","type":"address"}],"name":"declareWinner","outputs":[],"stateMutability":"nonpayable","type":"function"},
+  {"inputs":[],"name":"withdrawBet","outputs":[],"stateMutability":"nonpayable","type":"function"},
+  {"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"getWaitingPlayers","outputs":[{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function"},
+  {"inputs":[{"internalType":"address","name":"player","type":"address"}],"name":"getGame","outputs":[{"components":[{"internalType":"address","name":"player1","type":"address"},{"internalType":"address","name":"player2","type":"address"},{"internalType":"uint256","name":"betAmount","type":"uint256"},{"internalType":"bool","name":"active","type":"bool"}],"internalType":"struct PongBetGame.Game","name":"","type":"tuple"}],"stateMutability":"view","type":"function"}
+];
 
-// Adicione esta função após connectWallet():
-function initSocket() {
-  socket = io(SOCKET_SERVER_URL);
-  socket.on('connect', () => console.log('Connected to game server'));
-}
+// Jogo Demo
+const canvas = document.getElementById('demoCanvas');
+const ctx = canvas.getContext('2d');
+let ball = { x: 200, y: 100, vx: 3, vy: 3 };
 
-// Modifique connectWallet():
-async function connectWallet() {
-  try {
-    if (!window.ethereum) {
-      alert("Please install MetaMask!");
-      return;
-    }
-    provider = new ethers.providers.Web3Provider(window.ethereum);
-    await provider.send("eth_requestAccounts", []);
-    signer = provider.getSigner();
-    initSocket(); // Adicione esta linha
-    
-    // ... [restante do código original]
-  } catch (error) {
-    console.error("Error:", error);
-  }
+function gameLoop() {
+  ctx.fillStyle = 'rgba(10, 10, 26, 0.2)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  
+  ctx.fillStyle = '#00bcd4';
+  ctx.beginPath();
+  ctx.arc(ball.x, ball.y, 10, 0, Math.PI*2);
+  ctx.fill();
+  
+  ball.x += ball.vx;
+  ball.y += ball.vy;
+  
+  if(ball.x < 0 || ball.x > 400) ball.vx *= -1;
+  if(ball.y < 0 || ball.y > 200) ball.vy *= -1;
+  
+  requestAnimationFrame(gameLoop);
 }
+gameLoop();
+
+// Conexão com Carteira
+document.getElementById('connectBtn').addEventListener('click', async () => {
+  if(!window.ethereum) return alert("Instale o MetaMask!");
+  
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  await provider.send("eth_requestAccounts", []);
+  document.getElementById('connectBtn').textContent = "Connected!";
+});
 </script>
 </body>
 </html>
