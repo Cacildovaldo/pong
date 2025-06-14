@@ -39,17 +39,48 @@
       border-radius: 8px;
       cursor: pointer;
       margin: 10px;
+      font-size: 16px;
+      transition: all 0.3s;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 188, 212, 0.4);
+    }
+    button:disabled {
+      background: #cccccc;
+      cursor: not-allowed;
+    }
+    select {
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 16px;
+      margin: 10px;
     }
     #demoCanvas {
       background: #0a0a1a;
       border-radius: 12px;
       margin: 20px auto;
       display: block;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
     }
-    /* [Adicione todos os outros estilos da sua versão original aqui] */
+    #transactionStatus {
+      margin: 15px 0;
+      color: #00bcd4;
+      min-height: 20px;
+    }
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
   </style>
 </head>
 <body>
+<div class="particles" id="particles"></div>
 <div class="container">
   <h1>Pong Betting Game</h1>
   
@@ -62,58 +93,364 @@
       <option value="52500000">50 USDC</option>
       <option value="105000000">100 USDC</option>
       <option value="1050000000">1000 USDC</option>
+      <option value="10500000000">10,000 USDC</option>
     </select>
-    <button id="depositBtn">Deposit Bet</button>
+    <button id="depositBtn" disabled>Deposit Bet</button>
+    <div id="transactionStatus"></div>
+    <div id="waitingList"></div>
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
 <script>
 // Configurações do Contrato
 const CONTRACT_ADDRESS = "0x7228FC125EF5b4598315CEc74c37C16Fb2100447";
 const CONTRACT_ABI = [
-  {"inputs":[],"stateMutability":"nonpayable","type":"constructor"},
-  {"inputs":[],"name":"USDC","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
-  {"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"depositBet","outputs":[],"stateMutability":"nonpayable","type":"function"},
-  {"inputs":[{"internalType":"address","name":"opponent","type":"address"}],"name":"challengePlayer","outputs":[],"stateMutability":"nonpayable","type":"function"},
-  {"inputs":[{"internalType":"address","name":"loser","type":"address"}],"name":"declareWinner","outputs":[],"stateMutability":"nonpayable","type":"function"},
-  {"inputs":[],"name":"withdrawBet","outputs":[],"stateMutability":"nonpayable","type":"function"},
-  {"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"getWaitingPlayers","outputs":[{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function"},
-  {"inputs":[{"internalType":"address","name":"player","type":"address"}],"name":"getGame","outputs":[{"components":[{"internalType":"address","name":"player1","type":"address"},{"internalType":"address","name":"player2","type":"address"},{"internalType":"uint256","name":"betAmount","type":"uint256"},{"internalType":"bool","name":"active","type":"bool"}],"internalType":"struct PongBetGame.Game","name":"","type":"tuple"}],"stateMutability":"view","type":"function"}
+  {
+    "inputs": [],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [],
+    "name": "USDC",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "depositBet",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "opponent",
+        "type": "address"
+      }
+    ],
+    "name": "challengePlayer",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "loser",
+        "type": "address"
+      }
+    ],
+    "name": "declareWinner",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "withdrawBet",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "getWaitingPlayers",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "player",
+        "type": "address"
+      }
+    ],
+    "name": "getGame",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "player1",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "player2",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "betAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "active",
+            "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "gameEnded",
+            "type": "bool"
+          },
+          {
+            "internalType": "address",
+            "name": "winner",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct PongBetGame.Game",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
 ];
 
-// Jogo Demo
-const canvas = document.getElementById('demoCanvas');
-const ctx = canvas.getContext('2d');
-let ball = { x: 200, y: 100, vx: 3, vy: 3 };
+// Variáveis globais
+let provider, signer, contract;
+const SOCKET_SERVER_URL = "https://pong-server-9007.onrender.com";
+let socket;
 
-function gameLoop() {
-  ctx.fillStyle = 'rgba(10, 10, 26, 0.2)';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+// Elementos da UI
+const connectBtn = document.getElementById('connectBtn');
+const depositBtn = document.getElementById('depositBtn');
+const statusDiv = document.getElementById('transactionStatus');
+
+// Jogo Demo
+function initDemoGame() {
+  const canvas = document.getElementById('demoCanvas');
+  const ctx = canvas.getContext('2d');
+  let ball = { x: 200, y: 100, vx: 3, vy: 3, r: 10 };
+  let paddleLeft = { y: 80, height: 60 };
+  let paddleRight = { y: 80, height: 60 };
+
+  function draw() {
+    // Limpar canvas
+    ctx.fillStyle = 'rgba(10, 10, 26, 0.2)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Desenhar linha central
+    ctx.strokeStyle = 'rgba(0, 188, 212, 0.3)';
+    ctx.setLineDash([5, 10]);
+    ctx.beginPath();
+    ctx.moveTo(canvas.width/2, 0);
+    ctx.lineTo(canvas.width/2, canvas.height);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    
+    // Desenhar bolinha
+    ctx.fillStyle = '#00bcd4';
+    ctx.beginPath();
+    ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI*2);
+    ctx.fill();
+    
+    // Desenhar raquetes
+    ctx.fillStyle = '#00bcd4';
+    ctx.fillRect(20, paddleLeft.y, 10, paddleLeft.height);
+    ctx.fillRect(370, paddleRight.y, 10, paddleRight.height);
+    
+    // Movimento da bola
+    ball.x += ball.vx;
+    ball.y += ball.vy;
+    
+    // Colisão com paredes
+    if(ball.y < ball.r || ball.y > canvas.height - ball.r) {
+      ball.vy *= -1;
+    }
+    
+    // Movimento das raquetes (CPU)
+    paddleLeft.y += (ball.y - (paddleLeft.y + paddleLeft.height/2)) * 0.1;
+    paddleRight.y += (ball.y - (paddleRight.y + paddleRight.height/2)) * 0.1;
+    
+    // Limitar movimento das raquetes
+    paddleLeft.y = Math.max(0, Math.min(canvas.height - paddleLeft.height, paddleLeft.y));
+    paddleRight.y = Math.max(0, Math.min(canvas.height - paddleRight.height, paddleRight.y));
+    
+    requestAnimationFrame(draw);
+  }
   
-  ctx.fillStyle = '#00bcd4';
-  ctx.beginPath();
-  ctx.arc(ball.x, ball.y, 10, 0, Math.PI*2);
-  ctx.fill();
-  
-  ball.x += ball.vx;
-  ball.y += ball.vy;
-  
-  if(ball.x < 0 || ball.x > 400) ball.vx *= -1;
-  if(ball.y < 0 || ball.y > 200) ball.vy *= -1;
-  
-  requestAnimationFrame(gameLoop);
+  draw();
 }
-gameLoop();
 
 // Conexão com Carteira
-document.getElementById('connectBtn').addEventListener('click', async () => {
-  if(!window.ethereum) return alert("Instale o MetaMask!");
+async function connectWallet() {
+  try {
+    if (!window.ethereum) {
+      updateStatus("Please install MetaMask!");
+      return;
+    }
+    
+    updateStatus("Connecting to wallet...");
+    provider = new ethers.providers.Web3Provider(window.ethereum);
+    await provider.send("eth_requestAccounts", []);
+    signer = provider.getSigner();
+    contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+    
+    connectBtn.textContent = "Connected ✔";
+    depositBtn.disabled = false;
+    updateStatus("Wallet connected successfully!");
+    
+    initSocketConnection();
+    
+  } catch (error) {
+    console.error("Wallet connection error:", error);
+    updateStatus(`Error: ${error.message}`);
+  }
+}
+
+// Depósito de Aposta
+async function depositBet() {
+  if (!contract) {
+    updateStatus("Please connect wallet first!");
+    return;
+  }
+
+  const amount = document.getElementById('betAmount').value;
   
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  await provider.send("eth_requestAccounts", []);
-  document.getElementById('connectBtn').textContent = "Connected!";
-});
+  try {
+    depositBtn.disabled = true;
+    updateStatus("Approving USDC transfer...");
+    
+    // 1. Aprovar transferência
+    const usdcAddress = await contract.USDC();
+    const usdcAbi = ["function approve(address spender, uint256 amount)"];
+    const usdc = new ethers.Contract(usdcAddress, usdcAbi, signer);
+    
+    const approveTx = await usdc.approve(CONTRACT_ADDRESS, amount);
+    updateStatus("Waiting for approval confirmation...");
+    await approveTx.wait();
+    
+    // 2. Depositar aposta
+    updateStatus("Depositing bet...");
+    const tx = await contract.depositBet(amount);
+    await tx.wait();
+    
+    updateStatus("Deposit successful! Waiting for opponent...");
+    depositBtn.textContent = "Deposited!";
+    
+    // Atualizar lista de jogadores
+    await updateWaitingPlayers();
+    
+  } catch (error) {
+    console.error("Deposit error:", error);
+    updateStatus(`Error: ${error.message}`);
+    depositBtn.disabled = false;
+    depositBtn.textContent = "Deposit Bet";
+  }
+}
+
+// Socket.io Connection
+function initSocketConnection() {
+  socket = io(SOCKET_SERVER_URL);
+  
+  socket.on('connect', () => {
+    updateStatus("Connected to game server");
+  });
+  
+  socket.on('game_start', (data) => {
+    updateStatus(`Game started with ${data.betAmount/1e6} USDC bet`);
+  });
+}
+
+// Atualizar lista de jogadores
+async function updateWaitingPlayers() {
+  try {
+    const amount = document.getElementById('betAmount').value;
+    const players = await contract.getWaitingPlayers(amount);
+    const listDiv = document.getElementById('waitingList');
+    
+    listDiv.innerHTML = players.length > 0 ? 
+      "<h3>Available Players:</h3>" : 
+      "<p>No players waiting for this bet</p>";
+    
+    players.forEach(player => {
+      const btn = document.createElement('button');
+      btn.textContent = `Challenge ${player.substring(0, 6)}...`;
+      btn.onclick = () => challengePlayer(player);
+      listDiv.appendChild(btn);
+    });
+  } catch (error) {
+    console.error("Error updating players list:", error);
+  }
+}
+
+// Desafiar jogador
+async function challengePlayer(opponent) {
+  try {
+    updateStatus(`Challenging ${opponent.substring(0, 6)}...`);
+    const tx = await contract.challengePlayer(opponent);
+    await tx.wait();
+    updateStatus("Challenge sent! Waiting for acceptance...");
+  } catch (error) {
+    updateStatus(`Challenge failed: ${error.message}`);
+  }
+}
+
+// Atualizar status
+function updateStatus(text) {
+  statusDiv.textContent = text;
+  console.log(text);
+}
+
+// Inicialização
+window.onload = function() {
+  initDemoGame();
+  connectBtn.addEventListener('click', connectWallet);
+  depositBtn.addEventListener('click', depositBet);
+  
+  // Efeito de partículas
+  for (let i = 0; i < 50; i++) {
+    const particle = document.createElement('div');
+    particle.style.cssText = `
+      position: absolute;
+      width: ${Math.random() * 5 + 1}px;
+      height: ${Math.random() * 5 + 1}px;
+      background-color: rgba(0, 188, 212, ${Math.random() * 0.5 + 0.1});
+      border-radius: 50%;
+      left: ${Math.random() * 100}%;
+      top: ${Math.random() * 100}%;
+      animation: float ${Math.random() * 20 + 10}s linear infinite;
+    `;
+    document.getElementById('particles').appendChild(particle);
+  }
+};
 </script>
 </body>
 </html>
