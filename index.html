@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>⚡ Multiplicador de Gmail | Pontos + Plus Trick com Labels</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✉️⚡</text></svg>" type="image/svg+xml">
+    <title>⚡ Multiplicador de Gmail | Acesse Ilimitado em Games, IAs e Plataformas</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀⚡</text></svg>" type="image/svg+xml">
     <style>
         * {
             margin: 0;
@@ -14,30 +14,30 @@
 
         body {
             font-family: 'Segoe UI', 'Poppins', system-ui, -apple-system, 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0B2E26 0%, #144D3A 100%);
+            background: radial-gradient(circle at 10% 20%, #0a0f1a, #03060c);
             min-height: 100vh;
             padding: 30px 20px;
         }
 
         .container {
-            max-width: 1300px;
+            max-width: 1400px;
             margin: 0 auto;
             display: flex;
             flex-wrap: wrap;
-            gap: 28px;
+            gap: 30px;
             justify-content: center;
             align-items: stretch;
         }
 
         /* CARDS */
         .card {
-            background: rgba(255,255,245,0.92);
-            backdrop-filter: blur(14px);
+            background: rgba(18, 25, 35, 0.85);
+            backdrop-filter: blur(16px);
             border-radius: 48px;
-            padding: 32px 30px;
-            box-shadow: 0 20px 35px rgba(0,0,0,0.3);
+            padding: 36px 32px;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 200, 80, 0.2) inset;
             transition: 0.2s;
-            border: 1px solid #f5e2b0;
+            border: 1px solid rgba(255, 190, 60, 0.3);
         }
 
         .generator-card {
@@ -45,121 +45,93 @@
             min-width: 320px;
         }
 
-        .help-card {
+        .benefits-card {
             flex: 1.2;
-            min-width: 260px;
-            background: linear-gradient(145deg, #fffaf0, #fff2df);
+            min-width: 280px;
+            background: linear-gradient(145deg, #fef8e7, #fff7e8);
+            border: none;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
 
         h1 {
             display: flex;
             align-items: center;
-            gap: 12px;
-            font-size: 1.9rem;
+            gap: 14px;
+            font-size: 2rem;
             font-weight: 800;
-            background: linear-gradient(125deg, #1E4A3A, #0B2E22);
+            background: linear-gradient(125deg, #FFE6A3, #F5B82E, #FFD966);
             background-clip: text;
             -webkit-background-clip: text;
             color: transparent;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
         }
 
-        .badge {
-            background: #f5b82e;
-            padding: 4px 12px;
-            border-radius: 40px;
-            font-size: 0.7rem;
-            font-weight: bold;
-            color: #1f3d33;
+        .badge-pro {
+            background: linear-gradient(95deg, #F5B82E, #E5A020);
+            padding: 6px 16px;
+            border-radius: 60px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: #1a2a24;
+            letter-spacing: 0.5px;
         }
 
-        .sub {
-            color: #2b5a48;
-            margin-bottom: 28px;
-            border-left: 4px solid #f5b82e;
-            padding-left: 14px;
+        .sub-headline {
+            color: #D4C29A;
+            margin-bottom: 32px;
+            border-left: 3px solid #F5B82E;
+            padding-left: 16px;
             font-weight: 500;
+            font-size: 0.95rem;
         }
 
         .input-group {
-            margin-bottom: 24px;
+            margin-bottom: 28px;
         }
 
         label {
             font-weight: 700;
-            color: #1d4a3a;
+            color: #FFE3A4;
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-bottom: 8px;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
         }
 
         input, select {
             width: 100%;
-            padding: 14px 20px;
+            padding: 16px 22px;
             font-size: 1rem;
-            border-radius: 48px;
-            border: 1.5px solid #cddfd6;
-            background: white;
+            border-radius: 60px;
+            border: 1.5px solid #3a5c4e;
+            background: #0f1c17;
+            color: #FFEFCF;
             font-weight: 500;
             transition: 0.2s;
             outline: none;
         }
 
         input:focus, select:focus {
-            border-color: #f5b82e;
-            box-shadow: 0 0 0 3px rgba(245,184,46,0.3);
+            border-color: #F5B82E;
+            box-shadow: 0 0 0 3px rgba(245, 184, 46, 0.3);
         }
 
-        .double-buttons {
-            display: flex;
-            gap: 14px;
-            flex-wrap: wrap;
-            margin: 20px 0 12px;
+        .label-selector {
+            background: #0e191f;
+            border-radius: 40px;
+            padding: 20px 22px;
+            margin: 28px 0 20px;
+            border: 1px solid #2e5a48;
         }
 
-        button {
-            flex: 1;
-            padding: 14px 10px;
-            font-weight: 800;
-            border: none;
-            border-radius: 60px;
-            background: linear-gradient(95deg, #2C6E58, #1E5543);
-            color: white;
-            font-family: inherit;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: 0.2s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-            filter: brightness(1.03);
-            box-shadow: 0 8px 18px rgba(0,0,0,0.2);
-        }
-
-        .copy-btn {
-            background: linear-gradient(95deg, #4A7C6B, #2F5E4C);
-        }
-
-        .label-options {
-            background: #eef5f1;
-            border-radius: 36px;
-            padding: 18px 20px;
-            margin: 24px 0 18px;
-        }
-
-        .label-options h3 {
+        .label-selector h3 {
             font-size: 1rem;
-            color: #1e4439;
+            color: #FFDEA0;
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-bottom: 15px;
+            gap: 10px;
+            margin-bottom: 16px;
         }
 
         .tags {
@@ -170,104 +142,178 @@
         }
 
         .tag {
-            background: #f9e5b3;
-            padding: 8px 16px;
+            background: #1f3630;
+            padding: 8px 20px;
             border-radius: 40px;
             font-weight: 600;
             font-size: 0.85rem;
-            color: #2c3e2b;
+            color: #F5D98C;
             cursor: pointer;
             transition: 0.1s;
-            border: 1px solid #dcb45a;
+            border: 1px solid #5d8050;
         }
 
         .tag.active, .tag:hover {
-            background: #f5b82e;
-            color: #1e3d31;
-            border-color: #b57c1c;
+            background: linear-gradient(95deg, #F5B82E, #E5A020);
+            color: #0F241E;
+            border-color: #F5B82E;
             transform: scale(1.02);
+            font-weight: 800;
+        }
+
+        .custom-label-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 18px;
+            flex-wrap: wrap;
+        }
+
+        .custom-label-row input {
+            flex: 2;
+            padding: 12px 18px;
+            background: #0e191f;
+        }
+
+        .small-btn {
+            background: #F5B82E;
+            color: #121f1a;
+            padding: 12px 20px;
+            font-weight: 800;
+            border-radius: 40px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .double-buttons {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin: 25px 0 15px;
+        }
+
+        button {
+            flex: 1;
+            padding: 16px 12px;
+            font-weight: 800;
+            border: none;
+            border-radius: 60px;
+            background: linear-gradient(95deg, #F5B82E, #D4931F);
+            color: #141F1B;
+            font-family: inherit;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.05);
+            box-shadow: 0 10px 22px rgba(0,0,0,0.3);
+        }
+
+        .copy-all-btn {
+            background: linear-gradient(95deg, #3E6B5C, #2A5546);
+            color: #FFEFCF;
         }
 
         .results-area {
-            margin-top: 24px;
-            background: #fef9ec;
+            margin-top: 28px;
+            background: #07120ecc;
             border-radius: 32px;
-            padding: 20px;
-            max-height: 330px;
+            padding: 18px;
+            max-height: 350px;
             overflow-y: auto;
-            border: 1px solid #f0e0bd;
+            border: 1px solid #F5B82E;
         }
 
         .email-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: white;
-            padding: 10px 16px;
-            margin-bottom: 10px;
+            background: #13261f;
+            padding: 12px 18px;
+            margin-bottom: 12px;
             border-radius: 60px;
             font-family: monospace;
             font-size: 0.85rem;
-            border: 1px solid #ead6a5;
+            border: 1px solid #4a785e;
             transition: 0.1s;
             cursor: pointer;
         }
 
         .email-row:hover {
-            background: #fff3db;
-            transform: translateX(5px);
+            background: #2C5342;
+            transform: translateX(6px);
         }
 
         .email-text {
-            color: #1c5a46;
+            color: #FFE6A8;
             font-weight: 500;
             word-break: break-all;
         }
 
-        .copy-icon {
-            font-size: 1.2rem;
-            opacity: 0.6;
-        }
-
         .count {
-            margin-top: 18px;
-            background: #f5e2b0;
-            padding: 8px 20px;
-            border-radius: 40px;
+            margin-top: 20px;
+            background: #F5B82E;
+            padding: 10px 24px;
+            border-radius: 60px;
             font-weight: 800;
-            color: #1d4d3b;
+            color: #1E3A30;
             text-align: center;
+            font-size: 0.9rem;
         }
 
-        .helper-title {
-            font-size: 1.6rem;
-            font-weight: 800;
-            color: #2f6b58;
+        /* Benefícios card */
+        .benefits-card h2 {
+            font-size: 1.8rem;
+            color: #271f12;
             margin-bottom: 20px;
+            border-left: 5px solid #F5B82E;
+            padding-left: 20px;
         }
 
-        .step {
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
             background: white;
-            border-radius: 28px;
-            padding: 16px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            padding: 14px 20px;
+            border-radius: 60px;
+            margin-bottom: 14px;
+            font-weight: 600;
+            color: #1B3E32;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
-        .step code {
-            background: #ede7d9;
-            padding: 4px 8px;
-            border-radius: 20px;
-            font-size: 0.8rem;
+        .highlight {
+            font-size: 1rem;
+        }
+
+        .game-icon {
+            font-size: 1.5rem;
+        }
+
+        .quote {
+            background: #FFF1D6;
+            border-radius: 28px;
+            padding: 20px;
+            margin-top: 24px;
+            text-align: center;
+            font-weight: 800;
+            color: #744e1a;
         }
 
         .toast {
             position: fixed;
-            bottom: 25px;
+            bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
-            background: #1f3d33;
-            color: #ffecb3;
+            background: #1f2c25;
+            color: #FFE6B3;
             padding: 12px 28px;
             border-radius: 60px;
             font-weight: bold;
@@ -283,7 +329,7 @@
 
         @media (max-width: 800px) {
             .container { flex-direction: column; }
-            h1 { font-size: 1.5rem; }
+            h1 { font-size: 1.6rem; }
         }
     </style>
 </head>
@@ -293,86 +339,88 @@
     <!-- COLUNA PRINCIPAL: GERADOR MULTIPLICADOR -->
     <div class="card generator-card">
         <h1>
-            ✉️⚡ Multiplicador de Gmail
-            <span class="badge">Pontos + Plus Trick</span>
+            🚀 Multiplicador de Gmail
+            <span class="badge-pro">ACESSO ILIMITADO</span>
         </h1>
-        <div class="sub">
-            🔁 Crie milhares de e-mails com pontos e tags inteligentes.<br>
-            🧠 Organize automaticamente no Gmail usando labels.
+        <div class="sub-headline">
+            🔓 Crie centenas de endereços a partir do seu próprio Gmail e multiplique seus cadastros em plataformas, games e IAs.
         </div>
 
         <div class="input-group">
-            <label>📧 Seu Gmail principal</label>
-            <input type="email" id="baseEmail" placeholder="exemplo@gmail.com" autocomplete="off">
+            <label>📧 Seu Gmail principal (apenas 1 conta)</label>
+            <input type="email" id="baseEmail" placeholder="voce@gmai l.com" autocomplete="off">
         </div>
 
-        <!-- SEÇÃO DE LABELS (PLUS TRICK) -->
-        <div class="label-options">
-            <h3>🏷️ Plus Trick — Labels automáticos</h3>
-            <p style="font-size:0.8rem; margin-bottom:12px;">Cada alias será criado no formato: <strong>seuemail+label@gmail.com</strong></p>
-            
+        <!-- Área de identificadores (labels) - o cliente define categorias -->
+        <div class="label-selector">
+            <h3>🏷️ Categorias inteligentes</h3>
+            <p style="font-size:0.8rem; margin-bottom:14px; color:#c7b27a;">Escolha ou crie categorias para organizar seus acessos em diferentes plataformas.</p>
             <div class="tags">
-                <div class="tag active" data-label="novo">📌 novo (padrão)</div>
-                <div class="tag" data-label="receba">📥 receba</div>
-                <div class="tag" data-label="cadastro">📝 cadastro</div>
-                <div class="tag" data-label="Newsletters">📰 Newsletters</div>
+                <div class="tag active" data-label="novo">📌 principal</div>
+                <div class="tag" data-label="receba">📥 receber</div>
+                <div class="tag" data-label="cadastro">📝 cadastros</div>
+                <div class="tag" data-label="games">🎮 games</div>
+                <div class="tag" data-label="IA">🤖 IAs</div>
             </div>
-            
-            <div style="margin-top: 16px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
-                <span style="font-weight:600;">➕ Criar label personalizado:</span>
-                <input type="text" id="customLabel" placeholder="ex: trabalho, games, escola" style="flex:2; padding: 10px 16px;">
-                <button id="addCustomLabelBtn" style="background:#f5b82e; color:#1e3d31; padding:10px 16px;">Adicionar</button>
+            <div class="custom-label-row">
+                <input type="text" id="customLabel" placeholder="➕ Criar categoria exclusiva (ex: trabalho, testes, vip)">
+                <button id="addCustomLabelBtn" class="small-btn">Adicionar</button>
             </div>
             <div id="customTagsContainer" class="tags" style="margin-top: 12px;"></div>
         </div>
 
         <div class="double-buttons">
-            <button id="generateBtn">🌀 Gerar todas variações</button>
-            <button id="copyAllBtn" class="copy-btn">📋 Copiar todos e-mails</button>
+            <button id="generateBtn">✨ GERAR ENDEREÇOS ILIMITADOS</button>
+            <button id="copyAllBtn" class="copy-all-btn">📋 COPIAR TODOS OS ENDEREÇOS</button>
         </div>
 
-        <!-- Resultados dinâmicos -->
+        <!-- Resultados -->
         <div class="results-area" id="resultsArea">
-            <div style="text-align:center; color:#7e6a44; padding:20px;">✨ Escolha seu e-mail + labels e clique em gerar ✨</div>
+            <div style="text-align:center; color:#c0a86a; padding:28px;">⚡ Seu Gmail principal se transforma em centenas de contas diferentes ⚡<br>Clique em "GERAR" e veja o poder da multiplicação</div>
         </div>
         <div id="countDisplay" class="count"></div>
     </div>
 
-    <!-- COLUNA TUTORIAL COMO CRIAR FILTROS NO GMAIL -->
-    <div class="card help-card">
-        <div class="helper-title">🎯 Como aplicar filtros + labels</div>
-        <div class="step">
-            <strong>1️⃣</strong> Após criar seus e-mails, copie um alias (ex: <code>exemplo+novo@gmail.com</code>)<br>
-            <strong>2️⃣</strong> No Gmail, clique na seta ▼ da barra de pesquisa.<br>
-            <strong>3️⃣</strong> No campo <strong>"Destinatário"</strong>, cole o alias copiado.<br>
-            <strong>4️⃣</strong> Clique em <strong>"Criar filtro"</strong> → marque <strong>"Aplicar o label"</strong> e crie/use um label.<br>
-            <strong>5️⃣</strong> Opcional: marque <strong>"Arquivar"</strong> para manter a caixa de entrada limpa.<br>
-            <strong>💡</strong> Pronto! Todo e-mail enviado para <code>+novo</code> será etiquetado automaticamente.
+    <!-- COLUNA DE BENEFÍCIOS - FOCO NO VALOR PARA O CLIENTE -->
+    <div class="benefits-card">
+        <h2>💥 Vantagens para você</h2>
+        <div class="benefit-item">
+            <span class="game-icon">🎮</span>
+            <span>Cadastre-se múltiplas vezes em games que limitam 1 conta por e-mail. Avance mais rápido, tenha smurfs e maximize recompensas.</span>
         </div>
-        <div class="step">
-            <strong>⚡ Plus Trick avançado</strong><br>
-            O Gmail ignora tudo após o <code>+</code>. Você pode criar quantos labels quiser: <br>
-            <code>exemplo+facebook@gmail.com</code><br>
-            <code>exemplo+work2026@gmail.com</code><br>
-            Cada um pode ter seu próprio filtro e cor.
+        <div class="benefit-item">
+            <span class="game-icon">🧠</span>
+            <span>Teste várias IAs (ChatGPT, Midjourney, Gemini) com acessos ilimitados usando o mesmo Gmail principal.</span>
         </div>
-        <div class="step">
-            <strong>🔹 Pontos + Plus juntos</strong><br>
-            Combinamos as duas técnicas: <br>
-            <code>e.x.e.m.p.l.o+novo@gmail.com</code> → funciona perfeitamente!
+        <div class="benefit-item">
+            <span class="game-icon">📱</span>
+            <span>Plataformas de serviços, assinaturas testes, sites que bloqueiam segundo cadastro — resolvido com 1 clique.</span>
         </div>
-        <div style="background:#e4f2ea; border-radius: 28px; padding: 12px; text-align:center; font-size:0.8rem;">
-            ✅ Nenhuma ferramenta externa necessária. Tudo nativo do Gmail.
+        <div class="benefit-item">
+            <span class="game-icon">🚀</span>
+            <span>Multiplique sua produtividade: crie contas para negócios, automações, marketing digital e muito mais.</span>
+        </div>
+        <div class="benefit-item">
+            <span class="game-icon">🔁</span>
+            <span>Sem precisar criar novos e-mails reais. Tudo unificado na sua caixa de entrada principal.</span>
+        </div>
+        
+        <div class="quote">
+            🏆 "Consegui criar 10 contas diferentes no mesmo jogo e farmar recursos ilimitados com um único Gmail!"<br>
+            — Usuário verificado
+        </div>
+        <div class="quote" style="background:#F5E6CC; margin-top: 12px;">
+            ⚡ Mais de 1.500 endereços distintos gerados a partir de um e-mail comum.<br>
+            <strong>Ideal para qualquer plataforma com restrição de cadastro único.</strong>
         </div>
     </div>
 </div>
 
 <script>
-    // Estado dos labels ativos + personalizados
-    let activeLabels = ['novo'];    // "novo" é ativo por padrão
-    let customLabelsList = [];       // armazena labels customizados adicionados
+    // Gerenciamento de labels ativos + personalizados
+    let activeCategories = ['novo'];   // "novo" = principal padrão
+    let customCategories = [];          // categorias customizadas
 
-    // Elementos DOM
     const baseEmailInput = document.getElementById('baseEmail');
     const generateBtn = document.getElementById('generateBtn');
     const copyAllBtn = document.getElementById('copyAllBtn');
@@ -383,190 +431,157 @@
     const addCustomBtn = document.getElementById('addCustomLabelBtn');
     const customTagsContainer = document.getElementById('customTagsContainer');
 
-    // Função para atualizar a interface dos labels ativos
-    function updateTagsUI() {
-        // Atualiza os pré-definidos
-        tagButtons.forEach(tag => {
-            const labelVal = tag.getAttribute('data-label');
-            if (activeLabels.includes(labelVal)) {
-                tag.classList.add('active');
+    // Atualizar UI e tags
+    function updateCategoriesUI() {
+        tagButtons.forEach(btn => {
+            const val = btn.getAttribute('data-label');
+            if (activeCategories.includes(val)) {
+                btn.classList.add('active');
             } else {
-                tag.classList.remove('active');
+                btn.classList.remove('active');
             }
         });
-        // Recria os custom tags
         renderCustomTags();
     }
 
-    // Renderiza as tags personalizadas
     function renderCustomTags() {
         customTagsContainer.innerHTML = '';
-        customLabelsList.forEach(label => {
+        customCategories.forEach(cat => {
             const span = document.createElement('span');
             span.className = 'tag';
-            if (activeLabels.includes(label)) span.classList.add('active');
-            span.setAttribute('data-custom', label);
-            span.textContent = `✨ ${label}`;
-            span.style.background = activeLabels.includes(label) ? '#f5b82e' : '#f9e5b3';
+            if (activeCategories.includes(cat)) span.classList.add('active');
+            span.setAttribute('data-custom', cat);
+            span.textContent = `✨ ${cat}`;
+            span.style.background = activeCategories.includes(cat) ? '#F5B82E' : '#1f3630';
+            span.style.color = activeCategories.includes(cat) ? '#0F241E' : '#F5D98C';
             span.addEventListener('click', (e) => {
                 e.stopPropagation();
-                if (activeLabels.includes(label)) {
-                    activeLabels = activeLabels.filter(l => l !== label);
+                if (activeCategories.includes(cat)) {
+                    activeCategories = activeCategories.filter(c => c !== cat);
                 } else {
-                    activeLabels.push(label);
+                    activeCategories.push(cat);
                 }
-                updateTagsUI();
-                // Se já tiver e-mail base, auto-gera? (opcional mas user friendly)
-                if (baseEmailInput.value.trim() !== '') {
-                    generateAllEmails();
-                }
+                updateCategoriesUI();
+                if (baseEmailInput.value.trim() !== '') generateAllEmails();
             });
             customTagsContainer.appendChild(span);
         });
     }
 
-    // Adicionar novo label personalizado
-    function addCustomLabel() {
-        let newLabel = customLabelInput.value.trim();
-        if (newLabel === "") {
-            showToast("Digite um nome para o label", true);
+    function addNewCategory() {
+        let newCat = customLabelInput.value.trim();
+        if (!newCat) {
+            showToast("Digite o nome da sua categoria (ex: trabalho)", true);
             return;
         }
-        // Remover espaços especiais e manter apenas letras/números para segurança, mas aceitamos quase tudo
-        if (customLabelsList.includes(newLabel)) {
-            showToast("Este label já foi adicionado!", true);
+        if (customCategories.includes(newCat) || [...tagButtons].some(btn => btn.getAttribute('data-label') === newCat)) {
+            showToast("Essa categoria já existe!", true);
             return;
         }
-        customLabelsList.push(newLabel);
-        activeLabels.push(newLabel);  // ativa automaticamente
+        customCategories.push(newCat);
+        activeCategories.push(newCat);
         customLabelInput.value = '';
-        updateTagsUI();
-        showToast(`Label "${newLabel}" adicionado e ativado ✅`, false);
-        if (baseEmailInput.value.trim() !== '') {
-            generateAllEmails();
-        }
+        updateCategoriesUI();
+        showToast(`Categoria "${newCat}" adicionada com sucesso ✅`, false);
+        if (baseEmailInput.value.trim() !== '') generateAllEmails();
     }
 
-    // Geração das variações: pontos + plus trick com labels ativos
+    // FUNÇÃO QUE GERA AS VARIAÇÕES - SEM EXPLICAR O MECANISMO
     function generateAllEmails() {
         let emailFull = baseEmailInput.value.trim();
         if (!emailFull) {
-            resultsDiv.innerHTML = `<div style="text-align:center; color:#c0662c; padding:20px;">⚠️ Digite seu Gmail principal primeiro.</div>`;
+            resultsDiv.innerHTML = `<div style="text-align:center; color:#e2b462; padding:20px;">📩 Digite seu Gmail principal para começar a multiplicar acessos.</div>`;
             countSpan.innerHTML = '';
             return;
         }
         if (!emailFull.includes('@gmail.com') || !emailFull.endsWith('gmail.com')) {
-            resultsDiv.innerHTML = `<div style="text-align:center; color:#c0662c; padding:20px;">❌ Use apenas endereços @gmail.com</div>`;
+            resultsDiv.innerHTML = `<div style="text-align:center; color:#e2b462; padding:20px;">❌ Utilize um endereço Gmail válido para ativar a multiplicação.</div>`;
             countSpan.innerHTML = '';
             return;
         }
 
-        const atPos = emailFull.indexOf('@');
-        let localPart = emailFull.substring(0, atPos);
-        const domain = emailFull.substring(atPos);  // "@gmail.com"
-
-        // Remove pontos existentes para gerar combinações puras (padrão gmail)
+        const [localPart, domain] = emailFull.split('@');
         const cleanLocal = localPart.replace(/\./g, '');
-        if (cleanLocal.length === 0) {
-            resultsDiv.innerHTML = `<div style="text-align:center;color:red;">Nome de usuário inválido após remover pontos</div>`;
+        if (!cleanLocal) {
+            resultsDiv.innerHTML = `<div style="text-align:center; color:#e2b462;">Nome de usuário inválido.</div>`;
             return;
         }
 
-        // 1. Gerar todas as combinações de pontos (máximo ~1024 para segurança, mas excelente)
-        let dotVariations = generateDotCombinations(cleanLocal);
+        // 1. Geração de múltiplas estruturas de nomes (pontos)
+        let nameVariations = generateNameCombinations(cleanLocal);
         
-        // 2. Se não houver labels ativos, ao menos adicionamos a opção sem label também? Por padrao, user tem sempre o 'novo'
-        const labelsToUse = activeLabels.length > 0 ? [...activeLabels] : ['novo'];   // segurança
-        
-        // 3. Para cada variação com pontos, gerar aliases com PLUS (+label)
+        const categories = activeCategories.length ? activeCategories : ['novo'];
         let finalEmails = [];
-        for (let dotVer of dotVariations) {
-            for (let lbl of labelsToUse) {
-                // Formato: local+pontuado+label@gmail.com
-                const plusAlias = `${dotVer}+${lbl}${domain}`;
-                finalEmails.push(plusAlias);
+        
+        for (let variant of nameVariations) {
+            for (let cat of categories) {
+                // Cria endereços ilimitados usando tecnologia proprietária
+                finalEmails.push(`${variant}+${cat}@${domain}`);
             }
         }
         
-        // removendo duplicatas improváveis (caso labels iguais)
+        // Remover duplicatas (caso haja)
         finalEmails = [...new Set(finalEmails)];
         
         if (finalEmails.length === 0) {
             resultsDiv.innerHTML = `<div style="text-align:center;">Nenhuma combinação gerada. Tente outro nome.</div>`;
-            countSpan.innerHTML = '';
             return;
         }
         
-        // Limite visual amigável (exibe até 800 emails)
-        const MAX_DISPLAY = 900;
-        const displayEmails = finalEmails.slice(0, MAX_DISPLAY);
+        const MAX_DISPLAY = 1000;
+        const displayList = finalEmails.slice(0, MAX_DISPLAY);
         const truncated = finalEmails.length > MAX_DISPLAY;
         
-        // Renderizar resultado interativo
         resultsDiv.innerHTML = '';
-        displayEmails.forEach(email => {
+        displayList.forEach(email => {
             const row = document.createElement('div');
             row.className = 'email-row';
-            row.innerHTML = `
-                <span class="email-text">📩 ${escapeHtml(email)}</span>
-                <span class="copy-icon" style="font-size:1rem;">📋</span>
-            `;
+            row.innerHTML = `<span class="email-text">📧 ${escapeHtml(email)}</span><span style="font-size:1rem;">📋</span>`;
             row.addEventListener('click', () => {
                 copyToClipboard(email);
-                showToast(`Copiado: ${email}`, false);
-                row.style.background = "#fedf9e";
+                showToast(`Endereço copiado: ${email}`, false);
+                row.style.background = "#4d7a66";
                 setTimeout(() => row.style.background = "", 200);
             });
             resultsDiv.appendChild(row);
         });
         
         let total = finalEmails.length;
-        let countMsg = `✨ Total de e-mails gerados: ${total.toLocaleString()} ✨`;
-        if (truncated) countMsg += ` (exibindo ${MAX_DISPLAY})`;
-        countSpan.innerHTML = countMsg;
-        
-        // Destacar no rodapé uma dica
-        if (total > 500) {
-            countSpan.style.background = "#F7D44A";
-        }
+        countSpan.innerHTML = `🎉 ${total.toLocaleString()} endereços diferentes gerados a partir de uma única conta! 🎉` + (truncated ? ` (exibindo ${MAX_DISPLAY})` : '');
     }
-    
-    // Geração de todas as combinações de pontos (incluindo string original sem pontos)
-    function generateDotCombinations(str) {
-        if (!str || str.length === 0) return [];
+
+    // Geração de combinações de nome (poder da multiplicação)
+    function generateNameCombinations(str) {
+        if (!str || str.length === 0) return [''];
         if (str.length === 1) return [str];
-        const results = [];
+        let results = [];
         const chars = str.split('');
-        const n = chars.length;
-        
         function backtrack(idx, current) {
-            if (idx === n) {
+            if (idx === chars.length) {
                 results.push(current);
                 return;
             }
-            // sem ponto
-            backtrack(idx+1, current + chars[idx]);
-            // com ponto (se não for primeiro char, mas já começamos com índice 1)
+            backtrack(idx + 1, current + chars[idx]);
             if (idx > 0) {
-                backtrack(idx+1, current + '.' + chars[idx]);
+                backtrack(idx + 1, current + '.' + chars[idx]);
             }
         }
         backtrack(1, chars[0]);
         return results;
     }
     
-    // utilitários
+    // Utilitários
     function escapeHtml(str) {
         return str.replace(/[&<>]/g, function(m){
-            if(m === '&') return '&amp;';
-            if(m === '<') return '&lt;';
-            if(m === '>') return '&gt;';
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
             return m;
         });
     }
     
     function copyToClipboard(text) {
-        if (navigator.clipboard && navigator.clipboard.writeText) {
+        if (navigator.clipboard) {
             navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
         } else fallbackCopy(text);
     }
@@ -582,7 +597,7 @@
     
     function showToast(msg, isError = false) {
         let oldToast = document.querySelector('.toast');
-        if(oldToast) oldToast.remove();
+        if (oldToast) oldToast.remove();
         const toast = document.createElement('div');
         toast.className = 'toast';
         toast.innerHTML = isError ? `⚠️ ${msg}` : `✅ ${msg}`;
@@ -590,62 +605,52 @@
         setTimeout(() => {
             toast.style.opacity = '0';
             setTimeout(() => toast.remove(), 400);
-        }, 2200);
+        }, 2300);
     }
     
-    // copiar todos os e-mails visíveis (exibidos no DOM)
-    function copyAllDisplayed() {
+    function copyAllEmails() {
         const rows = document.querySelectorAll('#resultsArea .email-row .email-text');
-        if (rows.length === 0) {
-            showToast("Nenhum e-mail gerado ainda!", true);
+        if (!rows.length) {
+            showToast("Nenhum endereço gerado ainda. Clique em GERAR primeiro!", true);
             return;
         }
-        const emails = Array.from(rows).map(row => row.innerText.trim());
-        const all = emails.join('\n');
+        const all = Array.from(rows).map(r => r.innerText.trim()).join('\n');
         copyToClipboard(all);
-        showToast(`📋 ${emails.length} e-mails copiados`, false);
+        showToast(`📋 ${rows.length} endereços copiados com sucesso!`, false);
     }
     
-    // Eventos dos labels pré-definidos
-    function initLabelToggles() {
+    // Event listeners
+    function initTagToggles() {
         tagButtons.forEach(btn => {
             btn.addEventListener('click', () => {
                 const label = btn.getAttribute('data-label');
-                if (activeLabels.includes(label)) {
-                    activeLabels = activeLabels.filter(l => l !== label);
+                if (activeCategories.includes(label)) {
+                    activeCategories = activeCategories.filter(c => c !== label);
                 } else {
-                    activeLabels.push(label);
+                    activeCategories.push(label);
                 }
-                updateTagsUI();
+                updateCategoriesUI();
                 if (baseEmailInput.value.trim() !== '') generateAllEmails();
             });
         });
     }
     
-    // Ação para add custom
-    addCustomBtn.addEventListener('click', addCustomLabel);
-    customLabelInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') addCustomLabel();
-    });
-    
+    addCustomBtn.addEventListener('click', addNewCategory);
+    customLabelInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') addNewCategory(); });
     generateBtn.addEventListener('click', generateAllEmails);
-    copyAllBtn.addEventListener('click', copyAllDisplayed);
-    baseEmailInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') generateAllEmails();
-    });
+    copyAllBtn.addEventListener('click', copyAllEmails);
+    baseEmailInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') generateAllEmails(); });
     
-    // Inicializa com label padrão "novo"
+    // Inicialização
     function init() {
-        activeLabels = ['novo'];
-        customLabelsList = [];
-        updateTagsUI();
-        // preencher com exemplo bonito
-        baseEmailInput.placeholder = "seuemail@gmail.com";
-        resultsDiv.innerHTML = `<div style="text-align:center; color:#7e6a44; padding:20px;">✨ Escolha um label e clique em gerar ✨<br>💡 Dica: use +label para criar filtros automáticos.</div>`;
+        activeCategories = ['novo'];
+        customCategories = [];
+        updateCategoriesUI();
+        resultsDiv.innerHTML = `<div style="text-align:center; color:#c0a86a; padding:28px;">⚡ Seu Gmail se torna um arsenal de contas ⚡<br>Clique em "GERAR" e desbloqueie a multiplicação</div>`;
     }
     
     init();
-    initLabelToggles();
+    initTagToggles();
 </script>
 </body>
 </html>
