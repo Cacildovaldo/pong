@@ -212,12 +212,17 @@
         button:hover {
             transform: translateY(-2px);
             filter: brightness(1.05);
-            box-shadow: 0 10px 22px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 22px rgba(0, 0, 0, 0.3);
         }
 
         .copy-all-btn {
             background: linear-gradient(95deg, #3E6B5C, #2A5546);
             color: #FFEFCF;
+        }
+
+        .clear-btn {
+            background: linear-gradient(95deg, #4a3a2a, #36281c);
+            color: #FFE3A4;
         }
 
         .results-area {
@@ -286,11 +291,7 @@
             margin-bottom: 14px;
             font-weight: 600;
             color: #1B3E32;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-
-        .highlight {
-            font-size: 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
         .game-icon {
@@ -305,6 +306,27 @@
             text-align: center;
             font-weight: 800;
             color: #744e1a;
+        }
+
+        .creator-link {
+            margin-top: 24px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #a88f5a;
+            border-top: 1px solid #3a5c4e;
+            padding-top: 20px;
+        }
+
+        .creator-link a {
+            color: #F5B82E;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .creator-link a:hover {
+            text-decoration: underline;
+            color: #FFD966;
         }
 
         .toast {
@@ -330,6 +352,7 @@
         @media (max-width: 800px) {
             .container { flex-direction: column; }
             h1 { font-size: 1.6rem; }
+            .double-buttons { flex-direction: column; }
         }
     </style>
 </head>
@@ -348,7 +371,7 @@
 
         <div class="input-group">
             <label>📧 Seu Gmail principal (apenas 1 conta)</label>
-            <input type="email" id="baseEmail" placeholder="voce@gmai l.com" autocomplete="off">
+            <input type="email" id="baseEmail" placeholder="voce@gmail.com" autocomplete="off">
         </div>
 
         <!-- Área de identificadores (labels) - o cliente define categorias -->
@@ -371,7 +394,8 @@
 
         <div class="double-buttons">
             <button id="generateBtn">✨ GERAR ENDEREÇOS ILIMITADOS</button>
-            <button id="copyAllBtn" class="copy-all-btn">📋 COPIAR TODOS OS ENDEREÇOS</button>
+            <button id="copyAllBtn" class="copy-all-btn">📋 COPIAR TODOS</button>
+            <button id="clearBtn" class="clear-btn">🗑️ LIMPAR TUDO</button>
         </div>
 
         <!-- Resultados -->
@@ -379,6 +403,11 @@
             <div style="text-align:center; color:#c0a86a; padding:28px;">⚡ Seu Gmail principal se transforma em centenas de contas diferentes ⚡<br>Clique em "GERAR" e veja o poder da multiplicação</div>
         </div>
         <div id="countDisplay" class="count"></div>
+
+        <!-- Link do criador (DFG) -->
+        <div class="creator-link">
+            🔥 Criado e desenvolvido por <a href="https://www.dfg.com.br/user/digitais/listings" target="_blank">Digitais</a> — Tecnologia exclusiva de multiplicação
+        </div>
     </div>
 
     <!-- COLUNA DE BENEFÍCIOS - FOCO NO VALOR PARA O CLIENTE -->
@@ -424,6 +453,7 @@
     const baseEmailInput = document.getElementById('baseEmail');
     const generateBtn = document.getElementById('generateBtn');
     const copyAllBtn = document.getElementById('copyAllBtn');
+    const clearBtn = document.getElementById('clearBtn');
     const resultsDiv = document.getElementById('resultsArea');
     const countSpan = document.getElementById('countDisplay');
     const tagButtons = document.querySelectorAll('.tag[data-label]');
@@ -550,6 +580,14 @@
         countSpan.innerHTML = `🎉 ${total.toLocaleString()} endereços diferentes gerados a partir de uma única conta! 🎉` + (truncated ? ` (exibindo ${MAX_DISPLAY})` : '');
     }
 
+    // Função para limpar todos os resultados
+    function clearResults() {
+        resultsDiv.innerHTML = `<div style="text-align:center; color:#c0a86a; padding:28px;">⚡ Seu Gmail principal se transforma em centenas de contas diferentes ⚡<br>Clique em "GERAR" e veja o poder da multiplicação</div>`;
+        countSpan.innerHTML = '';
+        baseEmailInput.value = '';
+        showToast("🧹 Tudo limpo! Digite seu Gmail e gere novos endereços.", false);
+    }
+
     // Geração de combinações de nome (poder da multiplicação)
     function generateNameCombinations(str) {
         if (!str || str.length === 0) return [''];
@@ -639,6 +677,7 @@
     customLabelInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') addNewCategory(); });
     generateBtn.addEventListener('click', generateAllEmails);
     copyAllBtn.addEventListener('click', copyAllEmails);
+    clearBtn.addEventListener('click', clearResults);
     baseEmailInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') generateAllEmails(); });
     
     // Inicialização
