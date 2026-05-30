@@ -2,9 +2,11 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>⚡ Multiplicador de Gmail | Acesse Ilimitado em Games, IAs e Plataformas</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀⚡</text></svg>" type="image/svg+xml">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Gerador de Imagens IA</title>
+    <!-- Google Fonts: Space Grotesk & JetBrains Mono -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -13,683 +15,748 @@
         }
 
         body {
-            font-family: 'Segoe UI', 'Poppins', system-ui, -apple-system, 'Inter', sans-serif;
-            background: radial-gradient(circle at 10% 20%, #0a0f1a, #03060c);
-            min-height: 100vh;
-            padding: 30px 20px;
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #06080d;
+            color: #dde2f0;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            position: relative;
         }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 30px;
-            justify-content: center;
-            align-items: stretch;
-        }
-
-        /* CARDS */
-        .card {
-            background: rgba(18, 25, 35, 0.85);
-            backdrop-filter: blur(16px);
-            border-radius: 48px;
-            padding: 36px 32px;
-            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 200, 80, 0.2) inset;
-            transition: 0.2s;
-            border: 1px solid rgba(255, 190, 60, 0.3);
-        }
-
-        .generator-card {
-            flex: 2;
-            min-width: 320px;
-        }
-
-        .benefits-card {
-            flex: 1.2;
-            min-width: 280px;
-            background: linear-gradient(145deg, #fef8e7, #fff7e8);
-            border: none;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-        }
-
-        h1 {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            font-size: 2rem;
-            font-weight: 800;
-            background: linear-gradient(125deg, #FFE6A3, #F5B82E, #FFD966);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            margin-bottom: 12px;
-        }
-
-        .badge-pro {
-            background: linear-gradient(95deg, #F5B82E, #E5A020);
-            padding: 6px 16px;
-            border-radius: 60px;
-            font-size: 0.75rem;
-            font-weight: 800;
-            color: #1a2a24;
-            letter-spacing: 0.5px;
-        }
-
-        .sub-headline {
-            color: #D4C29A;
-            margin-bottom: 32px;
-            border-left: 3px solid #F5B82E;
-            padding-left: 16px;
-            font-weight: 500;
-            font-size: 0.95rem;
-        }
-
-        .input-group {
-            margin-bottom: 28px;
-        }
-
-        label {
-            font-weight: 700;
-            color: #FFE3A4;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-            font-size: 0.9rem;
-        }
-
-        input, select {
+        /* ambient radial gradients (z-index background) */
+        .ambient-gradients {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            padding: 16px 22px;
-            font-size: 1rem;
-            border-radius: 60px;
-            border: 1.5px solid #3a5c4e;
-            background: #0f1c17;
-            color: #FFEFCF;
-            font-weight: 500;
-            transition: 0.2s;
-            outline: none;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .gradient-blue {
+            position: absolute;
+            top: -20%;
+            left: -20%;
+            width: 70%;
+            height: 70%;
+            background: radial-gradient(ellipse at 30% 40%, rgba(91,143,255,0.07), transparent 70%);
+            border-radius: 50%;
+            filter: blur(60px);
+        }
+        .gradient-purple {
+            position: absolute;
+            bottom: -20%;
+            right: -20%;
+            width: 70%;
+            height: 70%;
+            background: radial-gradient(ellipse at 70% 80%, rgba(160,120,255,0.07), transparent 70%);
+            border-radius: 50%;
+            filter: blur(60px);
         }
 
-        input:focus, select:focus {
-            border-color: #F5B82E;
-            box-shadow: 0 0 0 3px rgba(245, 184, 46, 0.3);
+        /* main grid layout */
+        .app {
+            position: relative;
+            z-index: 2;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
-        .label-selector {
-            background: #0e191f;
-            border-radius: 40px;
-            padding: 20px 22px;
-            margin: 28px 0 20px;
-            border: 1px solid #2e5a48;
-        }
-
-        .label-selector h3 {
-            font-size: 1rem;
-            color: #FFDEA0;
+        /* topbar: 56px */
+        .topbar {
+            height: 56px;
+            width: 100%;
+            background: #0c0f18;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 16px;
+            padding: 0 28px;
+            backdrop-filter: blur(2px);
         }
-
-        .tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin: 12px 0;
-        }
-
-        .tag {
-            background: #1f3630;
-            padding: 8px 20px;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: #F5D98C;
-            cursor: pointer;
-            transition: 0.1s;
-            border: 1px solid #5d8050;
-        }
-
-        .tag.active, .tag:hover {
-            background: linear-gradient(95deg, #F5B82E, #E5A020);
-            color: #0F241E;
-            border-color: #F5B82E;
-            transform: scale(1.02);
-            font-weight: 800;
-        }
-
-        .custom-label-row {
-            display: flex;
-            gap: 12px;
-            margin-top: 18px;
-            flex-wrap: wrap;
-        }
-
-        .custom-label-row input {
-            flex: 2;
-            padding: 12px 18px;
-            background: #0e191f;
-        }
-
-        .small-btn {
-            background: #F5B82E;
-            color: #121f1a;
-            padding: 12px 20px;
-            font-weight: 800;
-            border-radius: 40px;
-            border: none;
-            cursor: pointer;
-        }
-
-        .double-buttons {
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
-            margin: 25px 0 15px;
-        }
-
-        button {
-            flex: 1;
-            padding: 16px 12px;
-            font-weight: 800;
-            border: none;
-            border-radius: 60px;
-            background: linear-gradient(95deg, #F5B82E, #D4931F);
-            color: #141F1B;
-            font-family: inherit;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: 0.2s;
+        .logo-mark {
+            width: 26px;
+            height: 26px;
+            background: #5b8fff;
+            border-radius: 8px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            margin-right: 12px;
         }
-
-        button:hover {
-            transform: translateY(-2px);
-            filter: brightness(1.05);
-            box-shadow: 0 10px 22px rgba(0, 0, 0, 0.3);
+        .logo-mark svg {
+            width: 14px;
+            height: 14px;
+            stroke: white;
+            stroke-width: 2;
+            fill: white;
         }
-
-        .copy-all-btn {
-            background: linear-gradient(95deg, #3E6B5C, #2A5546);
-            color: #FFEFCF;
+        .brand-text {
+            font-weight: 600;
+            font-size: 1rem;
+            letter-spacing: -0.2px;
+            color: #dde2f0;
         }
-
-        .clear-btn {
-            background: linear-gradient(95deg, #4a3a2a, #36281c);
-            color: #FFE3A4;
-        }
-
-        .results-area {
-            margin-top: 28px;
-            background: #07120ecc;
-            border-radius: 32px;
-            padding: 18px;
-            max-height: 350px;
-            overflow-y: auto;
-            border: 1px solid #F5B82E;
-        }
-
-        .email-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #13261f;
-            padding: 12px 18px;
-            margin-bottom: 12px;
-            border-radius: 60px;
-            font-family: monospace;
-            font-size: 0.85rem;
-            border: 1px solid #4a785e;
-            transition: 0.1s;
-            cursor: pointer;
-        }
-
-        .email-row:hover {
-            background: #2C5342;
-            transform: translateX(6px);
-        }
-
-        .email-text {
-            color: #FFE6A8;
-            font-weight: 500;
-            word-break: break-all;
-        }
-
-        .count {
-            margin-top: 20px;
-            background: #F5B82E;
-            padding: 10px 24px;
-            border-radius: 60px;
-            font-weight: 800;
-            color: #1E3A30;
-            text-align: center;
+        .brand-by {
+            font-weight: 300;
+            color: #4a5270;
+            margin-left: 6px;
             font-size: 0.9rem;
         }
 
-        /* Benefícios card */
-        .benefits-card h2 {
-            font-size: 1.8rem;
-            color: #271f12;
-            margin-bottom: 20px;
-            border-left: 5px solid #F5B82E;
-            padding-left: 20px;
+        /* two-column body: left 400px, right auto */
+        .main-layout {
+            flex: 1;
+            display: flex;
+            min-height: 0;
+            overflow: hidden;
         }
 
-        .benefit-item {
+        /* LEFT PANEL */
+        .left-panel {
+            width: 400px;
+            background: #0c0f18;
+            border-right: 1px solid rgba(255,255,255,0.06);
+            display: flex;
+            flex-direction: column;
+            padding: 28px 24px;
+            gap: 20px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+        }
+
+        /* right panel */
+        .right-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 36px;
+            overflow: auto;
+            position: relative;
+        }
+
+        /* muted label uppercase */
+        .muted-label {
+            font-size: 0.7rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: #4a5270;
+            font-weight: 500;
+        }
+
+        /* prompt container */
+        .prompt-container {
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.06);
+            background: transparent;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        .prompt-container:focus-within {
+            border-color: rgba(91,143,255,0.35);
+            box-shadow: 0 0 0 3px rgba(91,143,255,0.15);
+        }
+        textarea {
+            width: 100%;
+            background: transparent;
+            border: none;
+            padding: 16px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #dde2f0;
+            resize: none;
+            outline: none;
+            min-height: 130px;
+        }
+        textarea::placeholder {
+            font-style: italic;
+            color: #4a5270;
+            font-weight: 400;
+        }
+        /* toolbar inside prompt container */
+        .toolbar {
+            border-top: 1px solid rgba(255,255,255,0.06);
+            padding: 10px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .ratio-buttons {
+            display: flex;
+            gap: 12px;
+        }
+        .ratio-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 5px 8px;
+            border-radius: 10px;
+            transition: all 0.15s;
+        }
+        .ratio-btn svg rect {
+            transition: fill 0.1s, stroke 0.1s;
+        }
+        .ratio-btn .ratio-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9px;
+            color: #4a5270;
+            letter-spacing: 0.2px;
+        }
+        .ratio-btn.active {
+            background: rgba(91,143,255,0.1);
+        }
+        .ratio-btn.active .ratio-label {
+            color: #5b8fff;
+        }
+        .char-counter {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: #4a5270;
+        }
+        /* error box */
+        .error-box {
+            background: rgba(220, 50, 70, 0.1);
+            border-left: 3px solid #dc3246;
+            padding: 10px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            color: #ff8a9c;
+            display: none;
+        }
+        .error-box.show {
+            display: block;
+        }
+        /* generate button */
+        .generate-btn {
+            background: #5b8fff;
+            width: 100%;
+            border: none;
+            border-radius: 16px;
+            padding: 14px 0;
+            font-weight: 600;
+            font-size: 14px;
+            font-family: 'Space Grotesk', sans-serif;
+            color: white;
             display: flex;
             align-items: center;
-            gap: 14px;
-            background: white;
-            padding: 14px 20px;
-            border-radius: 60px;
-            margin-bottom: 14px;
-            font-weight: 600;
-            color: #1B3E32;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 24px rgba(91,143,255,0.22);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            cursor: pointer;
         }
-
-        .game-icon {
-            font-size: 1.5rem;
+        .generate-btn:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 28px rgba(91,143,255,0.35);
         }
-
-        .quote {
-            background: #FFF1D6;
-            border-radius: 28px;
-            padding: 20px;
-            margin-top: 24px;
+        .generate-btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+        .spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        .btn-icon {
+            width: 18px;
+            height: 18px;
+            display: inline-flex;
+        }
+        .generate-btn.loading .btn-icon {
+            display: none;
+        }
+        .generate-btn.loading .spinner {
+            display: inline-block;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* tip with kbd */
+        .tip-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: #4a5270;
             text-align: center;
-            font-weight: 800;
-            color: #744e1a;
+            margin-top: 8px;
+        }
+        kbd {
+            background: #1e2338;
+            border-radius: 6px;
+            padding: 2px 6px;
+            font-size: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            color: #b7c0e0;
+            margin: 0 2px;
         }
 
-        .creator-link {
-            margin-top: 24px;
+        /* Right panel states */
+        .state-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .empty-state, .result-state, .skeleton-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+        .empty-state {
+            opacity: 0.6;
             text-align: center;
-            font-size: 0.85rem;
-            color: #a88f5a;
-            border-top: 1px solid #3a5c4e;
-            padding-top: 20px;
+            gap: 16px;
         }
-
-        .creator-link a {
-            color: #F5B82E;
+        .icon-round {
+            background: #111520;
+            border: 1px solid rgba(255,255,255,0.06);
+            width: 64px;
+            height: 64px;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .empty-state h3 {
+            font-weight: 500;
+            font-size: 1rem;
+            color: #dde2f0;
+        }
+        .empty-state p {
+            font-size: 0.8rem;
+            color: #4a5270;
+        }
+        .result-state {
+            gap: 16px;
+            max-width: 100%;
+        }
+        .image-frame {
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.08);
+            background: #0c0f18;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            max-width: 100%;
+        }
+        .generated-img {
+            max-width: 100%;
+            max-height: calc(100vh - 140px);
+            object-fit: contain;
+            display: block;
+        }
+        .download-panel {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+            margin-top: 8px;
+        }
+        .download-link {
+            background: #111520;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 40px;
+            padding: 6px 16px;
+            font-size: 12px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 500;
+            color: #dde2f0;
             text-decoration: none;
-            font-weight: bold;
-            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.1s;
+        }
+        .download-link:hover {
+            background: #1e2338;
+            border-color: #5b8fff;
+        }
+        .resolution-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: #4a5270;
+        }
+        .hidden {
+            display: none !important;
+        }
+        /* skeleton styling */
+        .skeleton-state {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+        .skeleton-card {
+            background: #0c0f18;
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 24px;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            backdrop-filter: blur(2px);
+        }
+        .shimmer {
+            position: relative;
+            background: linear-gradient(110deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.08) 35%, rgba(255,255,255,0.02) 65%);
+            background-size: 200% 100%;
+            animation: shimmerMove 1.4s infinite ease-in-out;
+        }
+        @keyframes shimmerMove {
+            0% { background-position: -100% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .skeleton-card .skeleton-icon svg {
+            opacity: 0.2;
+        }
+        .generating-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: #4a5270;
+        }
+        .generating-text:after {
+            content: '';
+            animation: dots 1.4s steps(3, end) infinite;
+        }
+        @keyframes dots {
+            0% { content: ''; }
+            25% { content: '.'; }
+            50% { content: '..'; }
+            75% { content: '...'; }
+            100% { content: ''; }
         }
 
-        .creator-link a:hover {
-            text-decoration: underline;
-            color: #FFD966;
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #1f2c25;
-            color: #FFE6B3;
-            padding: 12px 28px;
-            border-radius: 60px;
-            font-weight: bold;
-            z-index: 1000;
-            font-family: monospace;
-            animation: fadeUp 0.2s ease;
-        }
-
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateX(-50%) translateY(20px);}
-            to { opacity: 1; transform: translateX(-50%) translateY(0);}
-        }
-
-        @media (max-width: 800px) {
-            .container { flex-direction: column; }
-            h1 { font-size: 1.6rem; }
-            .double-buttons { flex-direction: column; }
+        /* responsive */
+        @media (max-width: 780px) {
+            .main-layout {
+                flex-direction: column;
+            }
+            .left-panel {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid rgba(255,255,255,0.06);
+                max-height: 45%;
+            }
+            .right-panel {
+                padding: 24px;
+            }
         }
     </style>
 </head>
 <body>
-
-<div class="container">
-    <!-- COLUNA PRINCIPAL: GERADOR MULTIPLICADOR -->
-    <div class="card generator-card">
-        <h1>
-            🚀 Multiplicador de Gmail
-            <span class="badge-pro">ACESSO ILIMITADO</span>
-        </h1>
-        <div class="sub-headline">
-            🔓 Crie centenas de endereços a partir do seu próprio Gmail e multiplique seus cadastros em plataformas, games e IAs.
+<div class="ambient-gradients">
+    <div class="gradient-blue"></div>
+    <div class="gradient-purple"></div>
+</div>
+<div class="app">
+    <div class="topbar">
+        <div class="logo-mark">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 4L13.5 9L18 10.5L13.5 12L12 17L10.5 12L6 10.5L10.5 9L12 4Z" fill="white" stroke="white" stroke-width="1.2"/>
+                <path d="M19 15L19.5 17L21 17.5L19.5 18L19 20L18.5 18L17 17.5L18.5 17L19 15Z" fill="white"/>
+            </svg>
         </div>
-
-        <div class="input-group">
-            <label>📧 Seu Gmail principal (apenas 1 conta)</label>
-            <input type="email" id="baseEmail" placeholder="voce@gmail.com" autocomplete="off">
-        </div>
-
-        <!-- Área de identificadores (labels) - o cliente define categorias -->
-        <div class="label-selector">
-            <h3>🏷️ Categorias inteligentes</h3>
-            <p style="font-size:0.8rem; margin-bottom:14px; color:#c7b27a;">Escolha ou crie categorias para organizar seus acessos em diferentes plataformas.</p>
-            <div class="tags">
-                <div class="tag active" data-label="novo">📌 principal</div>
-                <div class="tag" data-label="receba">📥 receber</div>
-                <div class="tag" data-label="cadastro">📝 cadastros</div>
-                <div class="tag" data-label="games">🎮 games</div>
-                <div class="tag" data-label="IA">🤖 IAs</div>
-            </div>
-            <div class="custom-label-row">
-                <input type="text" id="customLabel" placeholder="➕ Criar categoria exclusiva (ex: trabalho, testes, vip)">
-                <button id="addCustomLabelBtn" class="small-btn">Adicionar</button>
-            </div>
-            <div id="customTagsContainer" class="tags" style="margin-top: 12px;"></div>
-        </div>
-
-        <div class="double-buttons">
-            <button id="generateBtn">✨ GERAR ENDEREÇOS ILIMITADOS</button>
-            <button id="copyAllBtn" class="copy-all-btn">📋 COPIAR TODOS</button>
-            <button id="clearBtn" class="clear-btn">🗑️ LIMPAR TUDO</button>
-        </div>
-
-        <!-- Resultados -->
-        <div class="results-area" id="resultsArea">
-            <div style="text-align:center; color:#c0a86a; padding:28px;">⚡ Seu Gmail principal se transforma em centenas de contas diferentes ⚡<br>Clique em "GERAR" e veja o poder da multiplicação</div>
-        </div>
-        <div id="countDisplay" class="count"></div>
-
-        <!-- Link do criador (DFG) -->
-        <div class="creator-link">
-            🔥 Criado e desenvolvido por <a href="https://www.dfg.com.br/user/digitais/listings" target="_blank">Digitais</a> — Tecnologia exclusiva de multiplicação
-        </div>
+        <span class="brand-text">Gerador de Imagens</span>
+        <span class="brand-by">by rcruzoe</span>
     </div>
+    <div class="main-layout">
+        <!-- LEFT PANEL -->
+        <div class="left-panel">
+            <div class="muted-label">Descreva sua imagem</div>
+            <div class="prompt-container">
+                <textarea id="promptTextarea" placeholder="ex: uma paisagem futurista com montanhas neon, céu estrelado..." rows="4"></textarea>
+                <div class="toolbar">
+                    <div class="ratio-buttons" id="ratioButtons">
+                        <button class="ratio-btn active" data-ratio="1:1">
+                            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                                <rect x="5" y="5" width="18" height="18" rx="2" fill="rgba(91,143,255,0.2)" stroke="#5b8fff" stroke-width="1.5"/>
+                            </svg>
+                            <span class="ratio-label">1:1</span>
+                        </button>
+                        <button class="ratio-btn" data-ratio="9:16">
+                            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                                <rect x="8" y="4" width="12" height="20" rx="2" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+                            </svg>
+                            <span class="ratio-label">9:16</span>
+                        </button>
+                        <button class="ratio-btn" data-ratio="16:9">
+                            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                                <rect x="4" y="8" width="20" height="12" rx="2" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+                            </svg>
+                            <span class="ratio-label">16:9</span>
+                        </button>
+                    </div>
+                    <div class="char-counter" id="charCounter">0 car.</div>
+                </div>
+            </div>
+            <div class="error-box" id="errorBox"></div>
+            <button class="generate-btn" id="generateBtn">
+                <span class="btn-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 4L13.5 9L18 10.5L13.5 12L12 17L10.5 12L6 10.5L10.5 9L12 4Z" fill="white"/>
+                        <path d="M19 15L19.5 17L21 17.5L19.5 18L19 20L18.5 18L17 17.5L18.5 17L19 15Z" fill="white"/>
+                    </svg>
+                </span>
+                <span class="spinner"></span>
+                <span>Gerar Imagem</span>
+            </button>
+            <div class="tip-text">
+                <kbd>Ctrl</kbd> + <kbd>Enter</kbd> para gerar
+            </div>
+        </div>
 
-    <!-- COLUNA DE BENEFÍCIOS - FOCO NO VALOR PARA O CLIENTE -->
-    <div class="benefits-card">
-        <h2>💥 Vantagens para você</h2>
-        <div class="benefit-item">
-            <span class="game-icon">🎮</span>
-            <span>Cadastre-se múltiplas vezes em games que limitam 1 conta por e-mail. Avance mais rápido, tenha smurfs e maximize recompensas.</span>
-        </div>
-        <div class="benefit-item">
-            <span class="game-icon">🧠</span>
-            <span>Teste várias IAs (ChatGPT, Midjourney, Gemini) com acessos ilimitados usando o mesmo Gmail principal.</span>
-        </div>
-        <div class="benefit-item">
-            <span class="game-icon">📱</span>
-            <span>Plataformas de serviços, assinaturas testes, sites que bloqueiam segundo cadastro — resolvido com 1 clique.</span>
-        </div>
-        <div class="benefit-item">
-            <span class="game-icon">🚀</span>
-            <span>Multiplique sua produtividade: crie contas para negócios, automações, marketing digital e muito mais.</span>
-        </div>
-        <div class="benefit-item">
-            <span class="game-icon">🔁</span>
-            <span>Sem precisar criar novos e-mails reais. Tudo unificado na sua caixa de entrada principal.</span>
-        </div>
-        
-        <div class="quote">
-            🏆 "Consegui criar 10 contas diferentes no mesmo jogo e farmar recursos ilimitados com um único Gmail!"<br>
-            — Usuário verificado
-        </div>
-        <div class="quote" style="background:#F5E6CC; margin-top: 12px;">
-            ⚡ Mais de 1.500 endereços distintos gerados a partir de um e-mail comum.<br>
-            <strong>Ideal para qualquer plataforma com restrição de cadastro único.</strong>
+        <!-- RIGHT PANEL: dynamic states -->
+        <div class="right-panel" id="rightPanel">
+            <!-- empty state -->
+            <div id="emptyState" class="state-container empty-state">
+                <div class="icon-round">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#4a5270" stroke-width="1.2">
+                        <rect x="3" y="3" width="18" height="18" rx="3" stroke="currentColor" fill="none"/>
+                        <circle cx="9" cy="9" r="1.5" fill="currentColor"/>
+                        <circle cx="15" cy="9" r="1.5" fill="currentColor"/>
+                        <path d="M8 15L12 12L16 15" stroke="currentColor" fill="none"/>
+                    </svg>
+                </div>
+                <h3>Sua imagem aparece aqui</h3>
+                <p>Descreva sua ideia e clique em gerar</p>
+            </div>
+            <!-- skeleton loading state (hidden initially) -->
+            <div id="skeletonState" class="state-container skeleton-state hidden">
+                <div id="skeletonBox" class="skeleton-card shimmer" style="aspect-ratio: 1/1; width: 80%; max-width: 480px; padding: 40px 20px;">
+                    <div class="skeleton-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#4a5270">
+                            <rect x="4" y="4" width="16" height="16" rx="2" stroke="currentColor" fill="none"/>
+                            <path d="M8 12L10 10L14 14L18 10" stroke="currentColor" fill="none"/>
+                        </svg>
+                    </div>
+                    <div class="generating-text">Gerando</div>
+                </div>
+            </div>
+            <!-- result state (hidden) -->
+            <div id="resultState" class="state-container result-state hidden">
+                <div class="image-frame" id="imageFrame">
+                    <img id="generatedImage" class="generated-img" alt="imagem gerada">
+                </div>
+                <div class="download-panel">
+                    <a id="downloadLink" class="download-link" download="imagem_gerada.png" href="#">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 3v12m0 0l-3-3m3 3l3-3M5 17v2a2 2 0 002 2h10a2 2 0 002-2v-2"/>
+                        </svg>
+                        Baixar PNG
+                    </a>
+                    <span id="resolutionLabel" class="resolution-label">1920 × 1920</span>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
-    // Gerenciamento de labels ativos + personalizados
-    let activeCategories = ['novo'];   // "novo" = principal padrão
-    let customCategories = [];          // categorias customizadas
+    (function() {
+        // Hardcoded API endpoint from provided URL
+        const API_ENDPOINT = "https://imagens.rcruzoe4.workers.dev/v1/images/generations";
+        
+        // DOM elements
+        const promptInput = document.getElementById('promptTextarea');
+        const charCounterSpan = document.getElementById('charCounter');
+        const generateBtn = document.getElementById('generateBtn');
+        const errorBox = document.getElementById('errorBox');
+        const ratioBtns = document.querySelectorAll('.ratio-btn');
+        const emptyStateDiv = document.getElementById('emptyState');
+        const skeletonStateDiv = document.getElementById('skeletonState');
+        const resultStateDiv = document.getElementById('resultState');
+        const generatedImage = document.getElementById('generatedImage');
+        const downloadLink = document.getElementById('downloadLink');
+        const resolutionSpan = document.getElementById('resolutionLabel');
+        const skeletonBox = document.getElementById('skeletonBox');
 
-    const baseEmailInput = document.getElementById('baseEmail');
-    const generateBtn = document.getElementById('generateBtn');
-    const copyAllBtn = document.getElementById('copyAllBtn');
-    const clearBtn = document.getElementById('clearBtn');
-    const resultsDiv = document.getElementById('resultsArea');
-    const countSpan = document.getElementById('countDisplay');
-    const tagButtons = document.querySelectorAll('.tag[data-label]');
-    const customLabelInput = document.getElementById('customLabel');
-    const addCustomBtn = document.getElementById('addCustomLabelBtn');
-    const customTagsContainer = document.getElementById('customTagsContainer');
+        let selectedRatio = "1:1";
+        let currentBase64 = "";
 
-    // Atualizar UI e tags
-    function updateCategoriesUI() {
-        tagButtons.forEach(btn => {
-            const val = btn.getAttribute('data-label');
-            if (activeCategories.includes(val)) {
-                btn.classList.add('active');
-            } else {
-                btn.classList.remove('active');
-            }
-        });
-        renderCustomTags();
-    }
+        function updateCharacterCounter() {
+            const len = promptInput.value.length;
+            charCounterSpan.innerText = `${len} car.`;
+        }
 
-    function renderCustomTags() {
-        customTagsContainer.innerHTML = '';
-        customCategories.forEach(cat => {
-            const span = document.createElement('span');
-            span.className = 'tag';
-            if (activeCategories.includes(cat)) span.classList.add('active');
-            span.setAttribute('data-custom', cat);
-            span.textContent = `✨ ${cat}`;
-            span.style.background = activeCategories.includes(cat) ? '#F5B82E' : '#1f3630';
-            span.style.color = activeCategories.includes(cat) ? '#0F241E' : '#F5D98C';
-            span.addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (activeCategories.includes(cat)) {
-                    activeCategories = activeCategories.filter(c => c !== cat);
+        function setActiveRatio(ratio) {
+            ratioBtns.forEach(btn => {
+                const r = btn.getAttribute('data-ratio');
+                if (r === ratio) {
+                    btn.classList.add('active');
+                    const svgRect = btn.querySelector('svg rect');
+                    if (svgRect) {
+                        svgRect.setAttribute('fill', 'rgba(91,143,255,0.2)');
+                        svgRect.setAttribute('stroke', '#5b8fff');
+                    }
                 } else {
-                    activeCategories.push(cat);
+                    btn.classList.remove('active');
+                    const svgRect = btn.querySelector('svg rect');
+                    if (svgRect) {
+                        svgRect.setAttribute('fill', 'rgba(255,255,255,0.06)');
+                        svgRect.setAttribute('stroke', 'rgba(255,255,255,0.25)');
+                    }
                 }
-                updateCategoriesUI();
-                if (baseEmailInput.value.trim() !== '') generateAllEmails();
             });
-            customTagsContainer.appendChild(span);
+        }
+
+        ratioBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const ratio = btn.getAttribute('data-ratio');
+                selectedRatio = ratio;
+                setActiveRatio(ratio);
+            });
         });
-    }
 
-    function addNewCategory() {
-        let newCat = customLabelInput.value.trim();
-        if (!newCat) {
-            showToast("Digite o nome da sua categoria (ex: trabalho)", true);
-            return;
-        }
-        if (customCategories.includes(newCat) || [...tagButtons].some(btn => btn.getAttribute('data-label') === newCat)) {
-            showToast("Essa categoria já existe!", true);
-            return;
-        }
-        customCategories.push(newCat);
-        activeCategories.push(newCat);
-        customLabelInput.value = '';
-        updateCategoriesUI();
-        showToast(`Categoria "${newCat}" adicionada com sucesso ✅`, false);
-        if (baseEmailInput.value.trim() !== '') generateAllEmails();
-    }
-
-    // FUNÇÃO QUE GERA AS VARIAÇÕES - SEM EXPLICAR O MECANISMO
-    function generateAllEmails() {
-        let emailFull = baseEmailInput.value.trim();
-        if (!emailFull) {
-            resultsDiv.innerHTML = `<div style="text-align:center; color:#e2b462; padding:20px;">📩 Digite seu Gmail principal para começar a multiplicar acessos.</div>`;
-            countSpan.innerHTML = '';
-            return;
-        }
-        if (!emailFull.includes('@gmail.com') || !emailFull.endsWith('gmail.com')) {
-            resultsDiv.innerHTML = `<div style="text-align:center; color:#e2b462; padding:20px;">❌ Utilize um endereço Gmail válido para ativar a multiplicação.</div>`;
-            countSpan.innerHTML = '';
-            return;
-        }
-
-        const [localPart, domain] = emailFull.split('@');
-        const cleanLocal = localPart.replace(/\./g, '');
-        if (!cleanLocal) {
-            resultsDiv.innerHTML = `<div style="text-align:center; color:#e2b462;">Nome de usuário inválido.</div>`;
-            return;
-        }
-
-        // 1. Geração de múltiplas estruturas de nomes (pontos)
-        let nameVariations = generateNameCombinations(cleanLocal);
-        
-        const categories = activeCategories.length ? activeCategories : ['novo'];
-        let finalEmails = [];
-        
-        for (let variant of nameVariations) {
-            for (let cat of categories) {
-                // Cria endereços ilimitados usando tecnologia proprietária
-                finalEmails.push(`${variant}+${cat}@${domain}`);
+        function setLoading(isLoading) {
+            if (isLoading) {
+                generateBtn.classList.add('loading');
+                generateBtn.disabled = true;
+                emptyStateDiv.classList.add('hidden');
+                resultStateDiv.classList.add('hidden');
+                skeletonStateDiv.classList.remove('hidden');
+                updateSkeletonDimensions();
+            } else {
+                generateBtn.classList.remove('loading');
+                generateBtn.disabled = false;
             }
         }
-        
-        // Remover duplicatas (caso haja)
-        finalEmails = [...new Set(finalEmails)];
-        
-        if (finalEmails.length === 0) {
-            resultsDiv.innerHTML = `<div style="text-align:center;">Nenhuma combinação gerada. Tente outro nome.</div>`;
-            return;
+
+        function updateSkeletonDimensions() {
+            if (!skeletonBox) return;
+            skeletonBox.classList.add('shimmer');
+            if (selectedRatio === '1:1') {
+                skeletonBox.style.aspectRatio = '1 / 1';
+                skeletonBox.style.width = '80%';
+                skeletonBox.style.maxWidth = '480px';
+            } else if (selectedRatio === '9:16') {
+                skeletonBox.style.aspectRatio = '9 / 16';
+                skeletonBox.style.width = '55%';
+                skeletonBox.style.maxWidth = '280px';
+            } else if (selectedRatio === '16:9') {
+                skeletonBox.style.aspectRatio = '16 / 9';
+                skeletonBox.style.width = '100%';
+                skeletonBox.style.maxWidth = '720px';
+            }
         }
-        
-        const MAX_DISPLAY = 1000;
-        const displayList = finalEmails.slice(0, MAX_DISPLAY);
-        const truncated = finalEmails.length > MAX_DISPLAY;
-        
-        resultsDiv.innerHTML = '';
-        displayList.forEach(email => {
-            const row = document.createElement('div');
-            row.className = 'email-row';
-            row.innerHTML = `<span class="email-text">📧 ${escapeHtml(email)}</span><span style="font-size:1rem;">📋</span>`;
-            row.addEventListener('click', () => {
-                copyToClipboard(email);
-                showToast(`Endereço copiado: ${email}`, false);
-                row.style.background = "#4d7a66";
-                setTimeout(() => row.style.background = "", 200);
-            });
-            resultsDiv.appendChild(row);
-        });
-        
-        let total = finalEmails.length;
-        countSpan.innerHTML = `🎉 ${total.toLocaleString()} endereços diferentes gerados a partir de uma única conta! 🎉` + (truncated ? ` (exibindo ${MAX_DISPLAY})` : '');
-    }
 
-    // Função para limpar todos os resultados
-    function clearResults() {
-        resultsDiv.innerHTML = `<div style="text-align:center; color:#c0a86a; padding:28px;">⚡ Seu Gmail principal se transforma em centenas de contas diferentes ⚡<br>Clique em "GERAR" e veja o poder da multiplicação</div>`;
-        countSpan.innerHTML = '';
-        baseEmailInput.value = '';
-        showToast("🧹 Tudo limpo! Digite seu Gmail e gere novos endereços.", false);
-    }
+        function showError(msg) {
+            errorBox.innerText = msg;
+            errorBox.classList.add('show');
+            setTimeout(() => {
+                errorBox.classList.remove('show');
+            }, 5000);
+        }
 
-    // Geração de combinações de nome (poder da multiplicação)
-    function generateNameCombinations(str) {
-        if (!str || str.length === 0) return [''];
-        if (str.length === 1) return [str];
-        let results = [];
-        const chars = str.split('');
-        function backtrack(idx, current) {
-            if (idx === chars.length) {
-                results.push(current);
+        function clearError() {
+            errorBox.classList.remove('show');
+            errorBox.innerText = '';
+        }
+
+        function getResolutionText(ratio) {
+            if (ratio === '1:1') return '1920 × 1920';
+            if (ratio === '9:16') return '1080 × 1920';
+            if (ratio === '16:9') return '1920 × 1080';
+            return '1920 × 1920';
+        }
+
+        async function generateImage() {
+            const promptText = promptInput.value.trim();
+            if (!promptText) {
+                showError('Por favor, descreva a imagem antes de gerar.');
                 return;
             }
-            backtrack(idx + 1, current + chars[idx]);
-            if (idx > 0) {
-                backtrack(idx + 1, current + '.' + chars[idx]);
+            clearError();
+            setLoading(true);
+            try {
+                const payload = {
+                    prompt: promptText,
+                    ratio: selectedRatio
+                };
+                const response = await fetch(API_ENDPOINT, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer 0001'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                if (!response.ok) {
+                    let errMsg = `Erro HTTP ${response.status}`;
+                    try {
+                        const errJson = await response.json();
+                        errMsg = errJson.message || errMsg;
+                    } catch(e) {}
+                    throw new Error(errMsg);
+                }
+                const data = await response.json();
+                if (data && data.data && data.data[0] && data.data[0].b64_json) {
+                    const b64 = data.data[0].b64_json;
+                    currentBase64 = b64;
+                    const imageSrc = `data:image/png;base64,${b64}`;
+                    generatedImage.src = imageSrc;
+                    downloadLink.href = imageSrc;
+                    const resText = getResolutionText(selectedRatio);
+                    resolutionSpan.innerText = resText;
+                    emptyStateDiv.classList.add('hidden');
+                    skeletonStateDiv.classList.add('hidden');
+                    resultStateDiv.classList.remove('hidden');
+                } else {
+                    throw new Error('Resposta inesperada: formato inválido');
+                }
+            } catch (err) {
+                console.error(err);
+                showError(`Falha na geração: ${err.message}`);
+                emptyStateDiv.classList.remove('hidden');
+                skeletonStateDiv.classList.add('hidden');
+                resultStateDiv.classList.add('hidden');
+            } finally {
+                setLoading(false);
             }
         }
-        backtrack(1, chars[0]);
-        return results;
-    }
-    
-    // Utilitários
-    function escapeHtml(str) {
-        return str.replace(/[&<>]/g, function(m){
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        });
-    }
-    
-    function copyToClipboard(text) {
-        if (navigator.clipboard) {
-            navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
-        } else fallbackCopy(text);
-    }
-    
-    function fallbackCopy(text) {
-        const textarea = document.createElement('textarea');
-        textarea.value = text;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
-    }
-    
-    function showToast(msg, isError = false) {
-        let oldToast = document.querySelector('.toast');
-        if (oldToast) oldToast.remove();
-        const toast = document.createElement('div');
-        toast.className = 'toast';
-        toast.innerHTML = isError ? `⚠️ ${msg}` : `✅ ${msg}`;
-        document.body.appendChild(toast);
-        setTimeout(() => {
-            toast.style.opacity = '0';
-            setTimeout(() => toast.remove(), 400);
-        }, 2300);
-    }
-    
-    function copyAllEmails() {
-        const rows = document.querySelectorAll('#resultsArea .email-row .email-text');
-        if (!rows.length) {
-            showToast("Nenhum endereço gerado ainda. Clique em GERAR primeiro!", true);
-            return;
+
+        function handleKeyDown(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                generateImage();
+            }
         }
-        const all = Array.from(rows).map(r => r.innerText.trim()).join('\n');
-        copyToClipboard(all);
-        showToast(`📋 ${rows.length} endereços copiados com sucesso!`, false);
-    }
-    
-    // Event listeners
-    function initTagToggles() {
-        tagButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const label = btn.getAttribute('data-label');
-                if (activeCategories.includes(label)) {
-                    activeCategories = activeCategories.filter(c => c !== label);
-                } else {
-                    activeCategories.push(label);
-                }
-                updateCategoriesUI();
-                if (baseEmailInput.value.trim() !== '') generateAllEmails();
-            });
+
+        // Event listeners
+        promptInput.addEventListener('input', () => {
+            updateCharacterCounter();
+            clearError();
         });
-    }
-    
-    addCustomBtn.addEventListener('click', addNewCategory);
-    customLabelInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') addNewCategory(); });
-    generateBtn.addEventListener('click', generateAllEmails);
-    copyAllBtn.addEventListener('click', copyAllEmails);
-    clearBtn.addEventListener('click', clearResults);
-    baseEmailInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') generateAllEmails(); });
-    
-    // Inicialização
-    function init() {
-        activeCategories = ['novo'];
-        customCategories = [];
-        updateCategoriesUI();
-        resultsDiv.innerHTML = `<div style="text-align:center; color:#c0a86a; padding:28px;">⚡ Seu Gmail se torna um arsenal de contas ⚡<br>Clique em "GERAR" e desbloqueie a multiplicação</div>`;
-    }
-    
-    init();
-    initTagToggles();
+        generateBtn.addEventListener('click', generateImage);
+        document.addEventListener('keydown', handleKeyDown);
+        
+        // Initialize
+        updateCharacterCounter();
+        setActiveRatio('1:1');
+        
+        // Test API connectivity on load (optional, silent)
+        console.log('API Endpoint configured:', API_ENDPOINT);
+    })();
 </script>
 </body>
 </html>
