@@ -1,802 +1,1031 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>✨ Gerador de Imagens IA | MagicShot ✨</title>
-    <!-- Google Fonts: Space Grotesk & JetBrains Mono -->
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
-    <!-- Emoji Favicon (modern browsers) -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text x='50' y='85' font-size='85' text-anchor='middle' fill='%235b8fff'>✨</text></svg>">
-    <meta name="theme-color" content="#06080d">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Âncora 1.0 — O Controle Financeiro Pessoal Definitivo | 100% Offline</title>
+<meta name="description" content="Software profissional de controle financeiro pessoal que roda 100% offline no seu Windows. Dashboard inteligente, orçamentos, contas a pagar, patrimônio e relatórios. Seus dados são seus.">
+<meta name="theme-color" content="#070b14">
+<meta property="og:title" content="Âncora 1.0 — Controle Financeiro Pessoal 100% Offline">
+<meta property="og:description" content="Chega de planilhas confusas e aplicativos que vendem seus dados. Tenha o controle total das suas finanças, offline e seguro.">
+<meta property="og:type" content="product">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚓</text></svg>">
+<style>
+/* ============ RESET / TOKENS ============ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#070b14;
+  --bg-2:#0b1120;
+  --surface:rgba(255,255,255,.035);
+  --surface-2:rgba(255,255,255,.06);
+  --line:rgba(255,255,255,.09);
+  --line-2:rgba(255,255,255,.16);
+  --txt:#e8edf6;
+  --txt-dim:#94a3b8;
+  --txt-mute:#64748b;
+  --brand:#22d3a7;
+  --brand-2:#0ea5e9;
+  --gold:#f5b942;
+  --danger:#fb7185;
+  --grad:linear-gradient(120deg,#22d3a7 0%,#38bdf8 50%,#818cf8 100%);
+  --grad-gold:linear-gradient(120deg,#f5b942,#fb923c);
+  --r-s:10px;--r-m:16px;--r-l:24px;--r-xl:32px;
+  --sh:0 24px 60px -20px rgba(0,0,0,.7);
+  --max:1180px;
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  background:var(--bg);color:var(--txt);
+  font-family:'Inter',system-ui,sans-serif;line-height:1.65;
+  overflow-x:hidden;-webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:'';position:fixed;inset:0;z-index:-2;pointer-events:none;
+  background:
+    radial-gradient(900px 600px at 12% -8%, rgba(34,211,167,.16), transparent 60%),
+    radial-gradient(800px 600px at 92% 4%, rgba(129,140,248,.15), transparent 62%),
+    radial-gradient(700px 500px at 50% 110%, rgba(56,189,248,.10), transparent 60%),
+    var(--bg);
+}
+body::after{
+  content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.35;
+  background-image:linear-gradient(rgba(255,255,255,.028) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(255,255,255,.028) 1px,transparent 1px);
+  background-size:60px 60px;
+  mask-image:radial-gradient(ellipse 80% 60% at 50% 30%,#000 30%,transparent 75%);
+  -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 30%,#000 30%,transparent 75%);
+}
+#particles{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.5}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+::selection{background:var(--brand);color:#04110c}
 
-        body {
-            font-family: 'Space Grotesk', sans-serif;
-            background-color: #06080d;
-            color: #eef2ff;
-            height: 100vh;
-            width: 100vw;
-            overflow: hidden;
-            position: relative;
-        }
+/* ============ LAYOUT ============ */
+.wrap{width:100%;max-width:var(--max);margin:0 auto;padding:0 22px}
+section{position:relative;padding:clamp(64px,9vw,116px) 0}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:9px;font-size:.74rem;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--brand);
+  padding:7px 15px;border:1px solid rgba(34,211,167,.28);
+  border-radius:100px;background:rgba(34,211,167,.07);margin-bottom:20px;
+}
+.eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--brand);box-shadow:0 0 0 0 rgba(34,211,167,.7);animation:pulse 2.2s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 9px rgba(34,211,167,0)}100%{box-shadow:0 0 0 0 rgba(34,211,167,0)}}
+h1,h2,h3,h4{font-family:'Sora',sans-serif;line-height:1.12;letter-spacing:-.025em;font-weight:800}
+h2{font-size:clamp(1.9rem,4.2vw,3rem);margin-bottom:18px}
+h3{font-size:clamp(1.1rem,2vw,1.35rem);font-weight:700}
+p{color:var(--txt-dim)}
+.lead{font-size:clamp(1rem,1.6vw,1.16rem);max-width:62ch}
+.grad-txt{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.center{text-align:center}
+.center .lead{margin:0 auto}
+.sec-head{max-width:720px;margin-bottom:clamp(34px,5vw,58px)}
+.sec-head.center{margin-left:auto;margin-right:auto}
 
-        /* enhanced ambient gradients + noise texture */
-        .ambient-gradients {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-        }
-        .gradient-blue {
-            position: absolute;
-            top: -20%;
-            left: -20%;
-            width: 70%;
-            height: 70%;
-            background: radial-gradient(ellipse at 30% 40%, rgba(91,143,255,0.12), transparent 70%);
-            border-radius: 50%;
-            filter: blur(70px);
-        }
-        .gradient-purple {
-            position: absolute;
-            bottom: -20%;
-            right: -20%;
-            width: 70%;
-            height: 70%;
-            background: radial-gradient(ellipse at 70% 80%, rgba(180, 130, 255, 0.1), transparent 70%);
-            border-radius: 50%;
-            filter: blur(70px);
-        }
-        .noise-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-            pointer-events: none;
-            z-index: 1;
-            opacity: 0.4;
-        }
+/* ============ BUTTONS ============ */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  padding:17px 32px;border-radius:100px;font-weight:700;font-size:.98rem;
+  letter-spacing:-.01em;position:relative;overflow:hidden;
+  transition:transform .35s var(--ease),box-shadow .35s var(--ease),background .3s;
+  white-space:nowrap;
+}
+.btn svg{flex-shrink:0}
+.btn-primary{
+  background:var(--grad);color:#04110c;
+  box-shadow:0 14px 34px -10px rgba(34,211,167,.65),inset 0 1px 0 rgba(255,255,255,.35);
+}
+.btn-primary::after{
+  content:'';position:absolute;top:0;left:-120%;width:60%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);
+  transform:skewX(-22deg);animation:sheen 3.6s ease-in-out infinite;
+}
+@keyframes sheen{0%,72%{left:-120%}92%,100%{left:130%}}
+.btn-primary:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 22px 48px -12px rgba(34,211,167,.8)}
+.btn-ghost{border:1px solid var(--line-2);background:var(--surface);color:var(--txt);backdrop-filter:blur(10px)}
+.btn-ghost:hover{background:var(--surface-2);transform:translateY(-3px);border-color:var(--brand)}
+.btn-lg{padding:20px 40px;font-size:1.05rem}
+.btn-block{width:100%}
+.btn:active{transform:translateY(-1px) scale(.99)}
 
-        /* main grid layout */
-        .app {
-            position: relative;
-            z-index: 2;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
+/* ============ TOP BAR + NAV ============ */
+.topbar{
+  background:linear-gradient(90deg,rgba(245,185,66,.14),rgba(251,146,60,.1));
+  border-bottom:1px solid rgba(245,185,66,.2);
+  padding:9px 16px;text-align:center;font-size:.83rem;color:#ffe6b3;
+}
+.topbar b{color:#fff;font-weight:700}
+.topbar .sep{opacity:.4;margin:0 8px}
+nav{
+  position:sticky;top:0;z-index:90;backdrop-filter:blur(18px);
+  background:rgba(7,11,20,.72);border-bottom:1px solid transparent;
+  transition:border-color .3s,background .3s;padding:14px 0;
+}
+nav.stuck{border-bottom-color:var(--line);background:rgba(7,11,20,.92)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;gap:20px}
+.logo{display:flex;align-items:center;gap:11px;font-family:'Sora';font-weight:800;font-size:1.06rem;letter-spacing:-.03em}
+.logo-mark{
+  width:38px;height:38px;border-radius:11px;display:grid;place-items:center;
+  background:var(--grad);color:#04110c;font-size:1.15rem;
+  box-shadow:0 8px 22px -6px rgba(34,211,167,.6);
+}
+.nav-links{display:flex;gap:28px;font-size:.9rem;color:var(--txt-dim)}
+.nav-links a{transition:color .25s;position:relative}
+.nav-links a:hover{color:var(--brand)}
+.nav-links a::after{content:'';position:absolute;left:0;bottom:-6px;height:2px;width:0;background:var(--grad);transition:width .3s var(--ease)}
+.nav-links a:hover::after{width:100%}
+@media(max-width:900px){.nav-links{display:none}}
 
-        /* TOPBAR: refined with emoji and glow */
-        .topbar {
-            height: 56px;
-            width: 100%;
-            background: rgba(12, 15, 24, 0.7);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-            display: flex;
-            align-items: center;
-            padding: 0 32px;
-            transition: all 0.2s;
-        }
-        .logo-mark {
-            width: 32px;
-            height: 32px;
-            background: linear-gradient(135deg, #5b8fff 0%, #8b6eff 100%);
-            border-radius: 12px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 12px;
-            box-shadow: 0 6px 14px rgba(91,143,255,0.25);
-        }
-        .logo-mark span {
-            font-size: 20px;
-            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
-        }
-        .brand-text {
-            font-weight: 700;
-            font-size: 1.1rem;
-            background: linear-gradient(135deg, #ffffff 0%, #b7c9ff 100%);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            letter-spacing: -0.3px;
-        }
-        .brand-by {
-            font-weight: 400;
-            color: #5b6c9c;
-            margin-left: 8px;
-            font-size: 0.85rem;
-            background: rgba(255,255,255,0.05);
-            padding: 2px 8px;
-            border-radius: 40px;
-            backdrop-filter: blur(4px);
-        }
+/* ============ HERO ============ */
+.hero{padding:clamp(48px,7vw,84px) 0 clamp(56px,7vw,90px);overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:1.02fr .98fr;gap:clamp(30px,5vw,60px);align-items:center}
+@media(max-width:1000px){.hero-grid{grid-template-columns:1fr;text-align:center}}
+@media(max-width:1000px){.hero-grid .lead,.hero-actions,.hero-badges{margin-left:auto;margin-right:auto}}
+.hero h1{font-size:clamp(2.2rem,5.6vw,4.05rem);margin-bottom:22px}
+.hero h1 .strike{position:relative;color:var(--txt-mute)}
+.hero h1 .strike::after{
+  content:'';position:absolute;left:-2%;top:52%;width:104%;height:4px;border-radius:4px;
+  background:var(--danger);transform:scaleX(0);transform-origin:left;
+  box-shadow:0 0 14px rgba(251,113,133,.7);
+}
+.reveal .strike::after{animation:strike .9s .9s var(--ease) forwards}
+@keyframes strike{to{transform:scaleX(1)}}
+.hero .lead{margin-bottom:32px}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:26px}
+.hero-badges{display:flex;gap:20px;flex-wrap:wrap;font-size:.83rem;color:var(--txt-mute)}
+.hero-badges span{display:flex;align-items:center;gap:7px}
+.tick{width:17px;height:17px;border-radius:50%;background:rgba(34,211,167,.16);color:var(--brand);display:grid;place-items:center;font-size:.66rem;flex-shrink:0}
 
-        /* two-column body */
-        .main-layout {
-            flex: 1;
-            display: flex;
-            min-height: 0;
-            overflow: hidden;
-        }
+/* fake app window */
+.mockup{
+  border:1px solid var(--line-2);border-radius:var(--r-l);overflow:hidden;
+  background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.02));
+  box-shadow:var(--sh);backdrop-filter:blur(14px);position:relative;
+  animation:float 7s ease-in-out infinite;
+}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-13px)}}
+.mockup::before{
+  content:'';position:absolute;inset:-1px;border-radius:inherit;padding:1px;
+  background:linear-gradient(140deg,rgba(34,211,167,.6),transparent 35%,transparent 65%,rgba(129,140,248,.55));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;
+}
+.mock-bar{display:flex;align-items:center;gap:7px;padding:11px 15px;background:rgba(0,0,0,.34);border-bottom:1px solid var(--line)}
+.mock-dot{width:11px;height:11px;border-radius:50%}
+.mock-title{margin-left:9px;font-size:.76rem;color:var(--txt-mute);font-family:'JetBrains Mono',monospace}
+.mock-lock{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:.68rem;color:var(--brand);font-weight:600}
+.mock-body{padding:18px}
+.mini-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.mini-stat{background:rgba(255,255,255,.045);border:1px solid var(--line);border-radius:var(--r-s);padding:12px}
+.mini-stat span{display:block;font-size:.63rem;color:var(--txt-mute);text-transform:uppercase;letter-spacing:.09em;margin-bottom:5px}
+.mini-stat b{font-family:'Sora';font-size:1.02rem;font-weight:700}
+.mini-stat.up b{color:var(--brand)} .mini-stat.down b{color:var(--danger)}
+.mock-canvas{width:100%;height:172px;display:block;border-radius:var(--r-s);background:rgba(0,0,0,.22);border:1px solid var(--line)}
+.mock-tags{display:flex;gap:7px;flex-wrap:wrap;margin-top:14px}
+.tag{font-size:.69rem;padding:5px 11px;border-radius:100px;background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--txt-dim)}
+.tag.ok{color:var(--brand);border-color:rgba(34,211,167,.3);background:rgba(34,211,167,.09)}
+.tag.warn{color:var(--gold);border-color:rgba(245,185,66,.3);background:rgba(245,185,66,.09)}
+.tag.bad{color:var(--danger);border-color:rgba(251,113,133,.3);background:rgba(251,113,133,.09)}
 
-        /* LEFT PANEL — glassmorphism */
-        .left-panel {
-            width: 420px;
-            background: rgba(12, 15, 24, 0.6);
-            backdrop-filter: blur(12px);
-            border-right: 1px solid rgba(255,255,255,0.05);
-            display: flex;
-            flex-direction: column;
-            padding: 32px 28px;
-            gap: 24px;
-            overflow-y: auto;
-            scrollbar-width: thin;
-        }
+.float-chip{
+  position:absolute;background:rgba(11,17,32,.94);border:1px solid var(--line-2);
+  border-radius:14px;padding:11px 15px;box-shadow:var(--sh);backdrop-filter:blur(10px);
+  font-size:.78rem;font-weight:600;display:flex;align-items:center;gap:9px;z-index:5;
+}
+.float-chip.c1{top:16%;left:-34px;animation:float2 6s ease-in-out infinite}
+.float-chip.c2{bottom:13%;right:-28px;animation:float2 6s ease-in-out infinite .8s}
+@keyframes float2{0%,100%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(-14px) rotate(1.5deg)}}
+@media(max-width:1000px){.float-chip{display:none}}
 
-        .right-panel {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 36px;
-            overflow: auto;
-            background: radial-gradient(ellipse at 30% 40%, rgba(12,15,24,0.2), transparent);
-        }
+/* ============ MARQUEE ============ */
+.strip{border-block:1px solid var(--line);padding:20px 0;overflow:hidden;background:rgba(255,255,255,.02)}
+.marquee{display:flex;gap:52px;width:max-content;animation:slide 32s linear infinite}
+.marquee span{display:flex;align-items:center;gap:11px;color:var(--txt-mute);font-weight:600;font-size:.88rem;white-space:nowrap}
+.marquee span::before{content:'◆';color:var(--brand);font-size:.6rem}
+@keyframes slide{to{transform:translateX(-50%)}}
 
-        /* labels with emoji */
-        .muted-label {
-            font-size: 0.7rem;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            color: #8f9bb5;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .muted-label span {
-            font-size: 1rem;
-        }
+/* ============ CARDS ============ */
+.grid{display:grid;gap:20px}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:1060px){.g4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:980px){.g3{grid-template-columns:1fr 1fr}}
+@media(max-width:660px){.g3,.g2,.g4{grid-template-columns:1fr}}
+.card{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-l);
+  padding:28px;transition:transform .45s var(--ease),border-color .35s,background .35s;position:relative;overflow:hidden;
+}
+.card:hover{transform:translateY(-6px);border-color:var(--line-2);background:var(--surface-2)}
+.card-ico{
+  width:50px;height:50px;border-radius:14px;display:grid;place-items:center;font-size:1.35rem;
+  background:rgba(34,211,167,.1);border:1px solid rgba(34,211,167,.22);margin-bottom:17px;
+}
+.card h3{margin-bottom:9px}
+.card p{font-size:.93rem}
+.card.pain .card-ico{background:rgba(251,113,133,.1);border-color:rgba(251,113,133,.22)}
+.card.pain h3{color:#ffd9df}
 
-        /* prompt container premium */
-        .prompt-container {
-            border-radius: 24px;
-            border: 1px solid rgba(255,255,255,0.08);
-            background: rgba(8, 10, 18, 0.7);
-            backdrop-filter: blur(4px);
-            transition: all 0.25s ease;
-            overflow: hidden;
-        }
-        .prompt-container:focus-within {
-            border-color: rgba(91,143,255,0.6);
-            box-shadow: 0 0 0 4px rgba(91,143,255,0.2);
-            background: rgba(10, 12, 22, 0.9);
-        }
-        textarea {
-            width: 100%;
-            background: transparent;
-            border: none;
-            padding: 20px;
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 0.95rem;
-            line-height: 1.55;
-            color: #f0f3fe;
-            resize: none;
-            outline: none;
-            min-height: 140px;
-        }
-        textarea::placeholder {
-            font-style: italic;
-            color: #5b6c9c;
-            font-weight: 400;
-        }
-        .toolbar {
-            border-top: 1px solid rgba(255,255,255,0.05);
-            padding: 12px 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(0,0,0,0.2);
-        }
-        .ratio-buttons {
-            display: flex;
-            gap: 16px;
-        }
-        .ratio-btn {
-            background: rgba(20, 24, 36, 0.6);
-            border: none;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
-            border-radius: 20px;
-            transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-        }
-        .ratio-btn:hover {
-            background: rgba(91,143,255,0.15);
-            transform: translateY(-2px);
-        }
-        .ratio-btn svg rect {
-            transition: fill 0.2s, stroke 0.2s;
-        }
-        .ratio-btn .ratio-label {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 9px;
-            font-weight: 400;
-            color: #8f9bb5;
-        }
-        .ratio-btn.active {
-            background: rgba(91,143,255,0.2);
-            box-shadow: 0 2px 8px rgba(91,143,255,0.2);
-        }
-        .ratio-btn.active .ratio-label {
-            color: #5b8fff;
-            font-weight: 500;
-        }
-        .char-counter {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
-            background: rgba(0,0,0,0.4);
-            padding: 4px 10px;
-            border-radius: 40px;
-            color: #9aa9c7;
-        }
+/* ============ PAIN ============ */
+.pain-band{position:relative}
+.pain-note{
+  margin-top:32px;padding:20px 26px;border-radius:var(--r-m);
+  border:1px dashed rgba(251,113,133,.35);background:rgba(251,113,133,.055);
+  color:#ffd9df;text-align:center;font-weight:600;font-size:.97rem;
+}
 
-        /* error box elegant */
-        .error-box {
-            background: rgba(220, 50, 70, 0.12);
-            border-left: 4px solid #ff5c6e;
-            padding: 12px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            color: #ffb3bb;
-            backdrop-filter: blur(4px);
-            display: none;
-        }
-        .error-box.show {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+/* ============ OFFLINE BANNER ============ */
+.offline{
+  display:grid;grid-template-columns:auto 1fr;gap:26px;align-items:center;
+  padding:clamp(26px,4vw,42px);border-radius:var(--r-xl);
+  border:1px solid rgba(34,211,167,.28);
+  background:linear-gradient(120deg,rgba(34,211,167,.09),rgba(56,189,248,.05));
+}
+@media(max-width:700px){.offline{grid-template-columns:1fr;text-align:center;justify-items:center}}
+.shield{font-size:3rem;filter:drop-shadow(0 0 22px rgba(34,211,167,.45))}
+.offline h3{margin-bottom:8px}
+.offline p{font-size:.96rem}
 
-        /* generate button 3D + emoji */
-        .generate-btn {
-            background: linear-gradient(105deg, #5b8fff 0%, #7c5eff 100%);
-            width: 100%;
-            border: none;
-            border-radius: 40px;
-            padding: 16px 0;
-            font-weight: 600;
-            font-size: 15px;
-            font-family: 'Space Grotesk', sans-serif;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            box-shadow: 0 8px 24px rgba(91,143,255,0.3);
-            transition: all 0.2s ease;
-            cursor: pointer;
-            letter-spacing: 0.3px;
-        }
-        .generate-btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 14px 32px rgba(91,143,255,0.45);
-            filter: brightness(1.02);
-        }
-        .generate-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-        .spinner {
-            display: none;
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(255,255,255,0.3);
-            border-top: 2px solid white;
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
-        }
-        .btn-icon {
-            font-size: 20px;
-            filter: drop-shadow(0 1px 1px rgba(0,0,0,0.2));
-        }
-        .generate-btn.loading .btn-icon {
-            display: none;
-        }
-        .generate-btn.loading .spinner {
-            display: inline-block;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+/* ============ FEATURES ============ */
+.feat{
+  display:flex;gap:18px;padding:26px;border-radius:var(--r-l);
+  border:1px solid var(--line);background:var(--surface);
+  transition:transform .4s var(--ease),border-color .3s,box-shadow .4s;
+}
+.feat:hover{transform:translateY(-5px);border-color:rgba(34,211,167,.4);box-shadow:0 18px 40px -22px rgba(34,211,167,.5)}
+.feat .card-ico{flex-shrink:0;margin-bottom:0}
+.feat h3{margin-bottom:7px;font-size:1.06rem}
+.feat p{font-size:.9rem}
 
-        .tip-text {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
-            color: #6e7ca3;
-            text-align: center;
-            margin-top: 8px;
-            background: rgba(0,0,0,0.3);
-            padding: 6px 12px;
-            border-radius: 60px;
-            width: fit-content;
-            align-self: center;
-        }
-        kbd {
-            background: #1c2132;
-            border-radius: 8px;
-            padding: 2px 8px;
-            font-size: 10px;
-            font-family: 'JetBrains Mono', monospace;
-            color: #cbd5ff;
-            margin: 0 3px;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
-        }
+/* ============ LIVE DEMO ============ */
+.demo-box{
+  border:1px solid var(--line-2);border-radius:var(--r-xl);overflow:hidden;
+  background:linear-gradient(160deg,rgba(255,255,255,.06),rgba(255,255,255,.015));box-shadow:var(--sh);
+}
+.demo-head{
+  display:flex;align-items:center;gap:12px;padding:16px 22px;
+  border-bottom:1px solid var(--line);background:rgba(0,0,0,.26);flex-wrap:wrap;
+}
+.demo-head h4{font-size:.98rem;margin:0}
+.demo-body{display:grid;grid-template-columns:1fr 340px;gap:0}
+@media(max-width:900px){.demo-body{grid-template-columns:1fr}}
+.demo-main{padding:26px;border-right:1px solid var(--line)}
+@media(max-width:900px){.demo-main{border-right:none;border-bottom:1px solid var(--line)}}
+.demo-side{padding:26px;background:rgba(0,0,0,.18)}
+.bars{display:flex;flex-direction:column;gap:16px}
+.bar-row{display:grid;grid-template-columns:112px 1fr 74px;gap:14px;align-items:center;font-size:.86rem}
+@media(max-width:520px){.bar-row{grid-template-columns:88px 1fr 62px;gap:10px;font-size:.79rem}}
+.bar-track{height:11px;border-radius:100px;background:rgba(255,255,255,.07);overflow:hidden;position:relative}
+.bar-fill{height:100%;border-radius:100px;width:0;transition:width 1.4s var(--ease);background:var(--grad)}
+.bar-fill.over{background:linear-gradient(90deg,#fb923c,#fb7185)}
+.bar-val{text-align:right;font-family:'JetBrains Mono',monospace;font-size:.82rem;font-weight:700}
+.bar-val.over{color:var(--danger)} .bar-val.ok{color:var(--brand)}
+.side-box{margin-bottom:22px}
+.side-box h5{font-size:.74rem;text-transform:uppercase;letter-spacing:.12em;color:var(--txt-mute);margin-bottom:12px;font-weight:700}
+.kv{display:flex;justify-content:space-between;font-size:.88rem;padding:9px 0;border-bottom:1px dashed var(--line)}
+.kv:last-child{border:none}
+.kv b{font-family:'JetBrains Mono',monospace}
+.kv b.pos{color:var(--brand)} .kv b.neg{color:var(--danger)}
+.donut-wrap{display:grid;place-items:center;gap:14px}
+#donut{width:190px;height:190px}
+.legend{display:grid;gap:7px;font-size:.8rem;width:100%}
+.legend div{display:flex;align-items:center;gap:9px;color:var(--txt-dim)}
+.legend i{width:11px;height:11px;border-radius:3px;flex-shrink:0}
+.demo-note{
+  display:flex;gap:12px;align-items:flex-start;padding:18px 22px;
+  border-top:1px solid var(--line);background:rgba(34,211,167,.06);font-size:.87rem;color:#b6f0e0;
+}
+.demo-note b{color:#fff}
 
-        /* Right panel states: premium */
-        .empty-state, .result-state, .skeleton-state {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            animation: fadeIn 0.3s ease;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.98);}
-            to { opacity: 1; transform: scale(1);}
-        }
-        .empty-state {
-            opacity: 0.7;
-            text-align: center;
-            gap: 20px;
-        }
-        .icon-round {
-            background: rgba(17, 21, 32, 0.7);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255,255,255,0.08);
-            width: 80px;
-            height: 80px;
-            border-radius: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 42px;
-            box-shadow: 0 10px 20px -5px rgba(0,0,0,0.3);
-        }
-        .empty-state h3 {
-            font-weight: 600;
-            font-size: 1.2rem;
-            background: linear-gradient(135deg, #eef2ff, #b2c4ff);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-        }
-        .empty-state p {
-            font-size: 0.85rem;
-            color: #7b89ae;
-        }
-        .result-state {
-            gap: 20px;
-        }
-        .image-frame {
-            border-radius: 28px;
-            border: 1px solid rgba(255,255,255,0.1);
-            background: #0a0d16;
-            overflow: hidden;
-            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.5);
-            transition: all 0.2s;
-        }
-        .generated-img {
-            max-width: 100%;
-            max-height: calc(100vh - 160px);
-            object-fit: contain;
-            display: block;
-        }
-        .download-panel {
-            display: flex;
-            gap: 28px;
-            align-items: center;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        .download-link {
-            background: rgba(20, 24, 38, 0.9);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(91,143,255,0.3);
-            border-radius: 60px;
-            padding: 8px 22px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #eef2ff;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            transition: 0.2s;
-        }
-        .download-link:hover {
-            background: #5b8fff;
-            border-color: white;
-            color: white;
-            transform: scale(1.02);
-        }
-        .resolution-label {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
-            background: rgba(0,0,0,0.4);
-            padding: 5px 12px;
-            border-radius: 40px;
-            color: #9aa9c7;
-        }
-        .hidden {
-            display: none !important;
-        }
+/* ============ COMPARISON ============ */
+.cmp{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r-l);-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;min-width:660px;min-width:min-content}
+th,td{padding:17px 20px;text-align:left;font-size:.9rem;border-bottom:1px solid var(--line)}
+th{font-family:'Sora';font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.09em;background:rgba(0,0,0,.3);color:var(--txt-mute)}
+th.hl{color:#04110c;background:var(--grad);border-radius:0}
+td.hl{background:rgba(34,211,167,.055);font-weight:600}
+tbody tr{transition:background .25s}
+tbody tr:hover{background:rgba(255,255,255,.035)}
+td.c-name{font-weight:600;color:var(--txt)}
+.mark{display:inline-grid;place-items:center;width:23px;height:23px;border-radius:50%;font-size:.74rem;font-weight:800}
+.mark.y{background:rgba(34,211,167,.16);color:var(--brand)}
+.mark.n{background:rgba(251,113,133,.14);color:var(--danger)}
+.mark.h{background:rgba(245,185,66,.14);color:var(--gold)}
 
-        /* skeleton with shimmer and emoji */
-        .skeleton-card {
-            background: rgba(12, 15, 24, 0.8);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 32px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-        }
-        .shimmer {
-            background: linear-gradient(110deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.08) 35%, rgba(255,255,255,0.02) 65%);
-            background-size: 200% 100%;
-            animation: shimmerMove 1.5s infinite ease-in-out;
-        }
-        @keyframes shimmerMove {
-            0% { background-position: -100% 0; }
-            100% { background-position: 200% 0; }
-        }
-        .generating-text {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 13px;
-            color: #8b9bcf;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .generating-text:after {
-            content: ' ✨';
-            animation: pulseDot 1.2s infinite;
-        }
-        @keyframes pulseDot {
-            0% { opacity: 0.4; content: ' .';}
-            33% { opacity: 1; content: ' ..';}
-            66% { content: ' ...';}
-            100% { opacity: 0.6; content: ' ✨';}
-        }
+/* ============ AUDIENCE ============ */
+.aud{
+  border:1px solid var(--line);border-radius:var(--r-l);padding:28px;background:var(--surface);
+  position:relative;overflow:hidden;transition:transform .4s var(--ease),border-color .3s;
+}
+.aud:hover{transform:translateY(-5px);border-color:var(--line-2)}
+.aud .emoji{font-size:1.9rem;margin-bottom:14px;display:block}
+.aud h3{font-size:1.05rem;margin-bottom:8px}
+.aud p{font-size:.9rem}
 
-        @media (max-width: 780px) {
-            .left-panel {
-                width: 100%;
-                border-right: none;
-                border-bottom: 1px solid rgba(255,255,255,0.06);
-                max-height: 48%;
-                backdrop-filter: blur(12px);
-            }
-            .right-panel {
-                padding: 24px;
-            }
-            .topbar {
-                padding: 0 20px;
-            }
-        }
+/* ============ STEPS ============ */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;position:relative}
+@media(max-width:860px){.steps{grid-template-columns:1fr}}
+.step{position:relative;padding:30px 26px;border-radius:var(--r-l);border:1px solid var(--line);background:var(--surface)}
+.step-n{
+  width:42px;height:42px;border-radius:12px;display:grid;place-items:center;
+  font-family:'Sora';font-weight:800;font-size:1.05rem;background:var(--grad);color:#04110c;margin-bottom:16px;
+}
+.step h3{font-size:1.04rem;margin-bottom:8px}
+.step p{font-size:.9rem}
 
-        /* scroll personalization */
-        ::-webkit-scrollbar {
-            width: 5px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0c0f18;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #5b8fff;
-            border-radius: 10px;
-        }
-    </style>
+/* ============ OFFER ============ */
+.offer{
+  border-radius:var(--r-xl);border:1px solid rgba(245,185,66,.3);overflow:hidden;
+  background:linear-gradient(155deg,rgba(245,185,66,.1),rgba(251,146,60,.04) 45%,rgba(255,255,255,.02));
+  box-shadow:var(--sh);position:relative;
+}
+.offer::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+}
+.offer-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:0}
+@media(max-width:920px){.offer-grid{grid-template-columns:1fr}}
+.offer-l{padding:clamp(28px,4.5vw,50px)}
+.offer-r{padding:clamp(28px,4.5vw,50px);background:rgba(0,0,0,.28);border-left:1px solid var(--line);display:flex;flex-direction:column;justify-content:center}
+@media(max-width:920px){.offer-r{border-left:none;border-top:1px solid var(--line)}}
+.price{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:20px 0 6px}
+.price .now{font-family:'Sora';font-size:clamp(2.6rem,6vw,3.6rem);font-weight:800;line-height:1;background:var(--grad-gold);-webkit-background-clip:text;background-clip:text;color:transparent}
+.price .cur{font-size:1.5rem;font-weight:700;color:var(--gold)}
+.installments{margin-top:16px;padding:15px 20px;border-radius:var(--r-m);background:rgba(255,255,255,.05);border:1px solid var(--line);font-size:.95rem}
+.installments b{font-family:'Sora';font-size:1.15rem;color:var(--brand)}
+.checklist{list-style:none;margin:24px 0}
+.checklist li{display:flex;gap:12px;align-items:flex-start;padding:9px 0;font-size:.94rem;color:var(--txt-dim)}
+.checklist li b{color:var(--txt);font-weight:600}
+.checklist .tick{margin-top:3px}
+.guarantee{
+  margin-top:22px;padding:18px;border-radius:var(--r-m);text-align:center;
+  border:1px dashed rgba(34,211,167,.35);background:rgba(34,211,167,.05);
+}
+.guarantee .g-ico{font-size:1.7rem;margin-bottom:6px}
+.guarantee b{display:block;font-family:'Sora';font-size:.95rem;margin-bottom:3px}
+.guarantee span{font-size:.83rem;color:var(--txt-dim)}
+.trust{display:grid;gap:11px;margin-top:22px}
+.trust div{display:flex;gap:11px;align-items:center;font-size:.87rem;color:var(--txt-dim)}
+
+/* ============ FAQ ============ */
+.faq{max-width:820px;margin:0 auto;display:grid;gap:12px}
+.faq-item{border:1px solid var(--line);border-radius:var(--r-m);background:var(--surface);overflow:hidden;transition:border-color .3s,background .3s}
+.faq-item.open{border-color:rgba(34,211,167,.35);background:var(--surface-2)}
+.faq-q{
+  width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:19px 22px;text-align:left;font-weight:600;font-size:.97rem;font-family:'Sora';
+}
+.faq-q .ico{
+  width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,.07);
+  display:grid;place-items:center;flex-shrink:0;transition:transform .4s var(--ease),background .3s;color:var(--brand);
+}
+.faq-item.open .ico{transform:rotate(135deg);background:var(--grad);color:#04110c}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .45s var(--ease)}
+.faq-a div{padding:0 22px 21px;font-size:.93rem;color:var(--txt-dim)}
+
+/* ============ FINAL CTA ============ */
+.final{
+  text-align:center;padding:clamp(52px,8vw,96px) clamp(24px,5vw,60px);
+  border-radius:var(--r-xl);border:1px solid rgba(34,211,167,.26);
+  background:
+    radial-gradient(700px 340px at 50% 0%, rgba(34,211,167,.18), transparent 70%),
+    linear-gradient(160deg,rgba(255,255,255,.06),rgba(255,255,255,.015));
+  position:relative;overflow:hidden;
+}
+.final h2{margin-bottom:14px}
+.final .lead{margin:0 auto 30px}
+.final-badges{display:flex;gap:22px;justify-content:center;flex-wrap:wrap;margin-top:26px;font-size:.84rem;color:var(--txt-mute)}
+
+/* ============ FOOTER ============ */
+footer{border-top:1px solid var(--line);padding:44px 0 34px;margin-top:20px}
+.f-in{display:flex;justify-content:space-between;gap:26px;flex-wrap:wrap;align-items:flex-start}
+footer p{font-size:.85rem;max-width:52ch}
+.f-links{display:flex;gap:24px;flex-wrap:wrap;font-size:.87rem;color:var(--txt-mute)}
+.f-links a:hover{color:var(--brand)}
+.f-bot{margin-top:30px;padding-top:22px;border-top:1px solid var(--line);font-size:.79rem;color:var(--txt-mute);text-align:center}
+.f-bot a{text-decoration:underline}
+
+/* ============ STICKY CTA ============ */
+.sticky-cta{
+  position:fixed;left:0;right:0;bottom:0;z-index:95;padding:11px 16px;
+  background:rgba(7,11,20,.95);backdrop-filter:blur(18px);border-top:1px solid var(--line-2);
+  transform:translateY(105%);transition:transform .45s var(--ease);
+  display:flex;align-items:center;gap:14px;justify-content:space-between;
+}
+.sticky-cta.show{transform:translateY(0)}
+.sc-price{font-family:'Sora';font-weight:800;font-size:1.15rem;white-space:nowrap}
+.sc-price em{font-style:normal;color:var(--gold);font-size:.82rem;display:block;font-family:'Inter';font-weight:600}
+@media(max-width:640px){
+  .sticky-cta .sc-info{display:none}
+  .sticky-cta .btn{flex:1}
+  .sc-price em{display:inline;margin-left:6px}
+}
+body{padding-bottom:0}
+@media(max-width:900px){body.has-sticky{padding-bottom:76px}}
+
+/* ============ REVEAL ============ */
+.rv{opacity:0;transform:translateY(34px);transition:opacity .85s var(--ease),transform .85s var(--ease)}
+.rv.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+  .rv{opacity:1;transform:none}
+}
+</style>
 </head>
 <body>
-<div class="ambient-gradients">
-    <div class="gradient-blue"></div>
-    <div class="gradient-purple"></div>
+<canvas id="particles"></canvas>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <b>⚡ Entrega imediata</b><span class="sep">•</span>Download liberado logo após a confirmação do pagamento
+  <span class="sep">•</span>Windows 7 a 11 · 100% offline
 </div>
-<div class="noise-overlay"></div>
-<div class="app">
-    <div class="topbar">
-        <div class="logo-mark">
-            <span>✨</span>
-        </div>
-        <span class="brand-text">Gerador de Imagens</span>
-        <span class="brand-by">by rcruzoe 🎨</span>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="wrap nav-in">
+    <a href="#" class="logo"><span class="logo-mark">⚓</span> Âncora&nbsp;1.0</a>
+    <div class="nav-links">
+      <a href="#recursos">Recursos</a>
+      <a href="#demo">Demonstração</a>
+      <a href="#comparar">Comparar</a>
+      <a href="#oferta">Preço</a>
+      <a href="#faq">Dúvidas</a>
     </div>
-    <div class="main-layout">
-        <!-- LEFT PANEL -->
-        <div class="left-panel">
-            <div class="muted-label">
-                <span>🎨</span> Descreva sua imagem
+    <a href="https://shop.maisfy.com.br/v2/checkout/H35pdtm4/Tidny8b1" target="_blank" rel="noopener" class="btn btn-primary" style="padding:12px 24px;font-size:.9rem">Quero controlar minhas finanças</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div class="rv in reveal">
+      <span class="eyebrow"><span class="dot"></span> Software 100% offline para Windows</span>
+      <h1>Chega de planilhas confusas.<br><span class="strike">Chega de app que vende seus dados.</span><br><span class="grad-txt">É hora de ancorar.</span></h1>
+      <p class="lead">O <b>Âncora 1.0</b> é um software profissional de controle financeiro pessoal que roda <b>100% no seu computador</b>. Nada de nuvem, nada de vazamento, nada de assinatura surpresa — só os seus números, sob o seu controle.</p>
+      <div class="hero-actions">
+        <a href="https://shop.maisfy.com.br/v2/checkout/H35pdtm4/Tidny8b1" target="_blank" rel="noopener" class="btn btn-primary btn-lg">Quero meu Âncora agora
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a href="#demo" class="btn btn-ghost btn-lg">Ver o software funcionando</a>
+      </div>
+      <div class="hero-badges">
+        <span><i class="tick">✓</i> Entrega imediata</span>
+        <span><i class="tick">✓</i> Sem assinatura mensal</span>
+        <span><i class="tick">✓</i> Windows 7 a 11</span>
+        <span><i class="tick">✓</i> Backup em .json</span>
+      </div>
+    </div>
+
+    <div class="rv in" style="position:relative">
+      <div class="mockup">
+        <div class="mock-bar">
+          <span class="mock-dot" style="background:#fb7185"></span>
+          <span class="mock-dot" style="background:#f5b942"></span>
+          <span class="mock-dot" style="background:#22d3a7"></span>
+          <span class="mock-title">ancora.exe — painel principal</span>
+          <span class="mock-lock">🔒 offline</span>
+        </div>
+        <div class="mock-body">
+          <div class="mini-stats">
+            <div class="mini-stat up"><span>Saldo total</span><b class="count" data-to="18432" data-prefix="R$ ">R$ 0</b></div>
+            <div class="mini-stat up"><span>Receitas</span><b class="count" data-to="7840" data-prefix="R$ ">R$ 0</b></div>
+            <div class="mini-stat down"><span>Despesas</span><b class="count" data-to="3921" data-prefix="R$ ">R$ 0</b></div>
+          </div>
+          <canvas class="mock-canvas" id="mockChart"></canvas>
+          <div class="mock-tags">
+            <span class="tag ok">✔ Aluguel pago</span>
+            <span class="tag warn">● Energia vence em 3 dias</span>
+            <span class="tag bad">✖ Mercado 112% do orçamento</span>
+            <span class="tag ok">✔ Fatura Nubank R$ 1.840</span>
+          </div>
+        </div>
+      </div>
+      <div class="float-chip c1">🛡️ <span>Nenhum dado sai daqui</span></div>
+      <div class="float-chip c2">📉 <span>Orçamento estourado detectado</span></div>
+    </div>
+  </div>
+</header>
+
+<!-- MARQUEE -->
+<div class="strip">
+  <div class="marquee">
+    <span>Dashboard Inteligente</span><span>Lançamentos Simplificados</span><span>Gestão de Contas e Cartões</span><span>Categorias e Orçamentos</span><span>Contas a Pagar</span><span>Assinaturas e Recorrências</span><span>Patrimônio</span><span>Veículos</span><span>Relatórios Avançados</span><span>Backup .json</span>
+    <span>Dashboard Inteligente</span><span>Lançamentos Simplificados</span><span>Gestão de Contas e Cartões</span><span>Categorias e Orçamentos</span><span>Contas a Pagar</span><span>Assinaturas e Recorrências</span><span>Patrimônio</span><span>Veículos</span><span>Relatórios Avançados</span><span>Backup .json</span>
+  </div>
+</div>
+
+<!-- PROBLEMA -->
+<section class="pain-band">
+  <div class="wrap">
+    <div class="sec-head center rv">
+      <span class="eyebrow"><span class="dot"></span> O problema</span>
+      <h2>Você trabalha duro. <span style="color:var(--txt-mute)">Mas para onde vai o dinheiro?</span></h2>
+      <p class="lead">Se você precisa de 40 minutos por mês para descobrir quanto gastou, o controle financeiro já virou uma segunda fonte de estresse.</p>
+    </div>
+    <div class="grid g3">
+      <article class="card pain rv">
+        <div class="card-ico">🧾</div>
+        <h3>Planilhas que ninguém entende</h3>
+        <p>Fórmulas quebradas, categorias duplicadas, valores colados no lugar errado. Um clique e o relatório inteiro mente.</p>
+      </article>
+      <article class="card pain rv">
+        <div class="card-ico">☁️</div>
+        <h3>Aplicativos que vendem seus dados</h3>
+        <p>Você precisa de internet, cria conta, aceita termos e entrega seu histórico financeiro a um servidor que você não conhece.</p>
+      </article>
+      <article class="card pain rv">
+        <div class="card-ico">🔁</div>
+        <h3>Assinaturas esquecidas</h3>
+        <p>Streaming, academia, app, nuvem. Cada cobrança é uma surpresa no extrato e o ano fecha no vermelho sem aviso.</p>
+      </article>
+    </div>
+    <div class="pain-note rv">💡 Nenhum desses problemas é falta de disciplina. É falta de uma ferramenta feita para o seu caso.</div>
+  </div>
+</section>
+
+<!-- SOLUÇÃO / OFFLINE -->
+<section>
+  <div class="wrap">
+    <div class="offline rv">
+      <div class="shield">🛡️</div>
+      <div>
+        <h3>100% offline. Privacidade por arquitetura, não por promessa.</h3>
+        <p>O Âncora não envia nenhuma informação para servidor externo. Sem nuvem obrigatória, sem rastreamento, sem vazamento, sem invasão — seu saldo, suas contas e seus padrões de gasto nunca saem do seu PC. Internet caiu? O software continua funcionando.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RECURSOS -->
+<section id="recursos">
+  <div class="wrap">
+    <div class="sec-head center rv">
+      <span class="eyebrow"><span class="dot"></span> Recursos</span>
+      <h2>Tudo o que um controle financeiro <span class="grad-txt">de verdade</span> precisa</h2>
+      <p class="lead">Interface limpa, intuitiva e rápida. Você não precisa ser contador — precisa apenas abrir e entender.</p>
+    </div>
+    <div class="grid g2">
+      <div class="feat rv"><div class="card-ico">📊</div><div><h3>Dashboard Inteligente</h3><p>Saldo total de todas as contas, receitas, despesas e balanço do mês na primeira tela. Gráficos dinâmicos de barras, linhas e donut mostram a distribuição dos seus gastos.</p></div></div>
+      <div class="feat rv"><div class="card-ico">📝</div><div><h3>Lançamentos Simplificados</h3><p>Registre receitas e despesas em segundos, associando conta bancária, categoria personalizada e até cartão de crédito. Rastreio impecável.</p></div></div>
+      <div class="feat rv"><div class="card-ico">💳</div><div><h3>Contas e Cartões</h3><p>Cadastre corrente, poupança e dinheiro. O sistema calcula os saldos automaticamente e estima o valor da fatura do cartão do mês.</p></div></div>
+      <div class="feat rv"><div class="card-ico">📂</div><div><h3>Categorias e Orçamentos</h3><p>Crie categorias do seu jeito (Aluguel, Supermercado, Salário) e defina o limite mensal. Indicadores visuais mostram exatamente onde você estourou.</p></div></div>
+      <div class="feat rv"><div class="card-ico">📅</div><div><h3>Contas a Pagar</h3><p>Nunca mais perca um vencimento. Status de Pago, A Vencer, Vencido e Último Dia. Vincule a uma categoria para lançar a despesa automaticamente.</p></div></div>
+      <div class="feat rv"><div class="card-ico">🔄</div><div><h3>Assinaturas e Recorrências</h3><p>Controle Netflix, Spotify, academia e parcelas. O sistema calcula o impacto anual e lança no mês corrente com um clique.</p></div></div>
+      <div class="feat rv"><div class="card-ico">📈</div><div><h3>Patrimônio e Veículos</h3><p>Acompanhe a evolução anual do patrimônio com crescimento nominal, inflação e crescimento real. E mantenha o histórico completo de manutenções do carro.</p></div></div>
+      <div class="feat rv"><div class="card-ico">📊</div><div><h3>Relatórios Avançados</h3><p>Evolução de receitas e despesas em 12 meses, orçado vs. realizado por categoria e identificação dos maiores focos de gasto.</p></div></div>
+      <div class="feat rv"><div class="card-ico">💾</div><div><h3>Backup e Restauração</h3><p>Exporte e importe tudo em um arquivo <b style="color:var(--brand)">.json</b> com um clique. Faça backups periódicos ou transfira tudo para outro computador.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- DEMO -->
+<section id="demo">
+  <div class="wrap">
+    <div class="sec-head center rv">
+      <span class="eyebrow"><span class="dot"></span> Demonstração interativa</span>
+      <h2>Veja o <span class="grad-txt">orçamento na prática</span></h2>
+      <p class="lead">Exemplo real de painel do Âncora. É exatamente assim que você vai enxergar seus gastos — e onde está o erro.</p>
+    </div>
+
+    <div class="demo-box rv">
+      <div class="demo-head">
+        <h4>⚓ Âncora — Orçamento por categoria</h4>
+        <span class="tag ok" style="margin-left:auto">● Mês atual</span>
+      </div>
+      <div class="demo-body">
+        <div class="demo-main">
+          <div class="bars">
+            <div class="bar-row"><span>Mercado</span><div class="bar-track"><div class="bar-fill over" data-w="92"></div></div><span class="bar-val over">R$ 1.380</span></div>
+            <div class="bar-row"><span>Aluguel</span><div class="bar-track"><div class="bar-fill" data-w="100"></div></div><span class="bar-val ok">R$ 1.600</span></div>
+            <div class="bar-row"><span>Transporte</span><div class="bar-track"><div class="bar-fill" data-w="54"></div></div><span class="bar-val">R$ 540</span></div>
+            <div class="bar-row"><span>Streaming</span><div class="bar-track"><div class="bar-fill over" data-w="118"></div></div><span class="bar-val over">R$ 236</span></div>
+            <div class="bar-row"><span>Saúde</span><div class="bar-track"><div class="bar-fill" data-w="38"></div></div><span class="bar-val">R$ 190</span></div>
+            <div class="bar-row"><span>Educação</span><div class="bar-track"><div class="bar-fill" data-w="71"></div></div><span class="bar-val">R$ 355</span></div>
+          </div>
+          <div class="demo-note">🚨 <span><b>Mercado e Streaming estouraram o limite.</b> Com o Âncora você descobre isso no dia — não no fechamento do cartão.</span></div>
+        </div>
+        <aside class="demo-side">
+          <div class="side-box">
+            <h5>Distribuição de gastos</h5>
+            <div class="donut-wrap">
+              <canvas id="donut" width="380" height="380"></canvas>
+              <div class="legend">
+                <div><i style="background:#22d3a7"></i> Moradia — 41%</div>
+                <div><i style="background:#38bdf8"></i> Alimentação — 26%</div>
+                <div><i style="background:#818cf8"></i> Transporte — 13%</div>
+                <div><i style="background:#f5b942"></i> Lazer — 12%</div>
+                <div><i style="background:#fb7185"></i> Outros — 8%</div>
+              </div>
             </div>
-            <div class="prompt-container">
-                <textarea id="promptTextarea" placeholder="🌌 Ex: um dragão de luz neon voando sobre Tóquio cyberpunk, chuva de hologramas..."></textarea>
-                <div class="toolbar">
-                    <div class="ratio-buttons" id="ratioButtons">
-                        <button class="ratio-btn active" data-ratio="1:1">
-                            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-                                <rect x="5" y="5" width="18" height="18" rx="3" fill="rgba(91,143,255,0.2)" stroke="#5b8fff" stroke-width="1.5"/>
-                            </svg>
-                            <span class="ratio-label">⬛ 1:1</span>
-                        </button>
-                        <button class="ratio-btn" data-ratio="9:16">
-                            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-                                <rect x="8" y="4" width="12" height="20" rx="3" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
-                            </svg>
-                            <span class="ratio-label">📱 9:16</span>
-                        </button>
-                        <button class="ratio-btn" data-ratio="16:9">
-                            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-                                <rect x="4" y="8" width="20" height="12" rx="3" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
-                            </svg>
-                            <span class="ratio-label">🖥️ 16:9</span>
-                        </button>
-                    </div>
-                    <div class="char-counter" id="charCounter">0 car.</div>
-                </div>
-            </div>
-            <div class="error-box" id="errorBox">
-                <span>⚠️</span> <span id="errorMsg"></span>
-            </div>
-            <button class="generate-btn" id="generateBtn">
-                <span class="btn-icon">✨🎨</span>
-                <span class="spinner"></span>
-                <span>Gerar Imagem</span>
-            </button>
-            <div class="tip-text">
-                <kbd>⌘ Ctrl</kbd> + <kbd>⏎ Enter</kbd> para criar magia
-            </div>
+          </div>
+          <div class="side-box">
+            <h5>Balanço do mês</h5>
+            <div class="kv"><span>Receitas</span><b class="pos">+ R$ 7.840</b></div>
+            <div class="kv"><span>Despesas</span><b class="neg">− R$ 3.921</b></div>
+            <div class="kv"><span>Resultado</span><b class="pos">+ R$ 3.919</b></div>
+            <div class="kv"><span>Taxa de poupança</span><b class="pos">49,9%</b></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARAÇÃO -->
+<section id="comparar">
+  <div class="wrap">
+    <div class="sec-head center rv">
+      <span class="eyebrow"><span class="dot"></span> Comparativo</span>
+      <h2>Por que o Âncora e <span class="grad-txt">não mais nada</span></h2>
+      <p class="lead">A diferença entre anotar gastos e realmente controlar o dinheiro.</p>
+    </div>
+    <div class="cmp rv">
+      <table>
+        <thead>
+          <tr>
+            <th>Recurso</th>
+            <th>Planilha</th>
+            <th>App na nuvem</th>
+            <th class="hl">⚓ Âncora 1.0</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="c-name">Funciona sem internet</td><td><span class="mark y">✓</span></td><td><span class="mark n">✕</span></td><td class="hl"><span class="mark y">✓</span></td></tr>
+          <tr><td class="c-name">Seus dados ficam no seu PC</td><td><span class="mark y">✓</span></td><td><span class="mark n">✕</span></td><td class="hl"><span class="mark y">✓</span></td></tr>
+          <tr><td class="c-name">Sem cadastro e sem termos de uso</td><td><span class="mark y">✓</span></td><td><span class="mark n">✕</span></td><td class="hl"><span class="mark y">✓</span></td></tr>
+          <tr><td class="c-name">Dashboard com gráficos prontos</td><td><span class="mark h">~</span></td><td><span class="mark y">✓</span></td><td class="hl"><span class="mark y">✓</span></td></tr>
+          <tr><td class="c-name">Orçamentos com alerta visual</td><td><span class="mark n">✕</span></td><td><span class="mark h">~</span></td><td class="hl"><span class="mark y">✓</span></td></tr>
+          <tr><td class="c-name">Contas a pagar com status</td><td><span class="mark h">~</span></td><td><span class="mark y">✓</span></td><td class="hl"><span class="mark y">✓</span></td></tr>
+          <tr><td class="c-name">Controle de cartões e faturas</td><td><span class="mark n">✕</span></td><td><span class="mark h">~</span></td><td class="hl"><span class="mark y">✓</span></td></tr>
+          <tr><td class="c-name">Assinaturas e recorrências</td><td><span class="mark n">✕</span></td><td><span class="mark h">~</span></td><td class="hl"><span class="mark y">✓</span></td></tr>
+          <tr><td class="c-name">Patrimônio vs. inflação</td><td><span class="mark n">✕</span></td><td><span class="mark h">~</span></td><td class="hl"><span class="mark y">✓</span></td></tr>
+          <tr><td class="c-name">Histórico de manutenção do veículo</td><td><span class="mark n">✕</span></td><td><span class="mark n">✕</span></td><td class="hl"><span class="mark y">✓</span></td></tr>
+          <tr><td class="c-name">Backup com um clique (.json)</td><td><span class="mark h">~</span></td><td><span class="mark h">~</span></td><td class="hl"><span class="mark y">✓</span></td></tr>
+          <tr><td class="c-name">Custo recorrente</td><td><span class="mark y">Grátis</span></td><td><span class="mark n">Assinatura</span></td><td class="hl"><span class="mark y">Pagamento único</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="center rv" style="margin-top:16px;font-size:.8rem;color:var(--txt-mute)"><span class="mark y">✓</span> tem &nbsp;·&nbsp; <span class="mark h">~</span> parcial ou limitado &nbsp;·&nbsp; <span class="mark n">✕</span> não oferece</p>
+  </div>
+</section>
+
+<!-- PÚBLICO-ALVO -->
+<section>
+  <div class="wrap">
+    <div class="sec-head center rv">
+      <span class="eyebrow"><span class="dot"></span> Para quem é</span>
+      <h2>Feito para quem trata dinheiro <span class="grad-txt">a sério</span></h2>
+    </div>
+    <div class="grid g4">
+      <div class="aud rv"><span class="emoji">💼</span><h3>Profissionais</h3><p>Querem um controle financeiro pessoal sério, detalhado e sem depender de internet no trabalho.</p></div>
+      <div class="aud rv"><span class="emoji">🏠</span><h3>Famílias</h3><p>Querem gerenciar o orçamento doméstico de forma colaborativa e eficiente, com contas fixas sob controle.</p></div>
+      <div class="aud rv"><span class="emoji">🧑‍💻</span><h3>Autônomos e freelancers</h3><p>Precisam de uma ferramenta offline e confiável para controlar rendimentos irregulares e despesas.</p></div>
+      <div class="aud rv"><span class="emoji">🔐</span><h3>Quem valoriza privacidade</h3><p>Não aceita expor dados financeiros a servidores externos. Simple assim: o dado fica com você.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- COMO FUNCIONA -->
+<section>
+  <div class="wrap">
+    <div class="sec-head center rv">
+      <span class="eyebrow"><span class="dot"></span> Simples do início ao fim</span>
+      <h2>Do pagamento ao primeiro relatório em <span class="grad-txt">3 passos</span></h2>
+    </div>
+    <div class="steps">
+      <div class="step rv"><div class="step-n">1</div><h3>Faça a compra</h3><p>Pague por Pix ou cartão. A confirmação é imediata e você recebe o acesso na hora.</p></div>
+      <div class="step rv"><div class="step-n">2</div><h3>Baixe e instale</h3><p>Arquivo pronto para uso no Windows 7, 8, 10 e 11. Sem dependência externa, sem runtime adicional, sem cadastro.</p></div>
+      <div class="step rv"><div class="step-n">3</div><h3>Cadastre e controle</h3><p>Contas, cartões, categorias e orçamentos. Em poucos minutos o dashboard mostra a real da sua saúde financeira.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- OFERTA -->
+<section id="oferta">
+  <div class="wrap">
+    <div class="offer rv">
+      <div class="offer-grid">
+        <div class="offer-l">
+          <span class="eyebrow" style="color:var(--gold);border-color:rgba(245,185,66,.3);background:rgba(245,185,66,.08)"><span class="dot" style="background:var(--gold)"></span> Pagamento único</span>
+          <h2>Leve o controle financeiro <span class="grad-txt">definitivo</span></h2>
+          <p style="margin-bottom:6px">Pagamento único. Sem mensalidade, sem assinatura, sem taxa escondida. Acesso vitalício ao software.</p>
+          <div class="price">
+            <span class="cur">R$</span>
+            <span class="now">119,90</span>
+          </div>
+          <p style="font-size:.88rem;color:var(--gold);font-weight:600;margin-top:2px">Entrega imediata após a confirmação do pagamento</p>
+          <div class="installments">ou até <b>12x de R$ 9,99</b> no cartão</div>
+
+          <ul class="checklist">
+            <li><i class="tick">✓</i><span><b>Software completo Âncora 1.0</b> — todas as funções ativas, sem versão demo ou crippled.</span></li>
+            <li><i class="tick">✓</i><span><b>Windows 7, 8, 10 e 11</b> — instalação pronta, sem dependência externa ou runtime adicional.</span></li>
+            <li><i class="tick">✓</i><span><b>Entrega imediata</b> — link de download liberado logo após a confirmação do pagamento.</span></li>
+            <li><i class="tick">✓</i><span><b>Backup em .json</b> — seus dados ficam com você, para sempre.</span></li>
+            <li><i class="tick">✓</i><span><b>Software leve e rápido</b> — roda bem em máquinas simples, com design responsivo.</span></li>
+          </ul>
+
+          <div class="guarantee">
+            <div class="g-ico">🛡️</div>
+            <b>Garantia de 7 dias</b>
+            <span>Instale, use, confira. Se não for o que você esperava, solicite o reembolso.</span>
+          </div>
         </div>
 
-        <!-- RIGHT PANEL: dynamic states -->
-        <div class="right-panel" id="rightPanel">
-            <!-- empty state -->
-            <div id="emptyState" class="state-container empty-state">
-                <div class="icon-round">
-                    🖼️✨
-                </div>
-                <h3>Sua imagem aparece aqui</h3>
-                <p>💡 Descreva sua visão criativa e clique em gerar</p>
-            </div>
-            <!-- skeleton loading state -->
-            <div id="skeletonState" class="state-container skeleton-state hidden">
-                <div id="skeletonBox" class="skeleton-card shimmer" style="aspect-ratio: 1/1; width: 80%; max-width: 480px; padding: 48px 20px;">
-                    <div class="skeleton-icon" style="font-size: 48px;">🎨✨</div>
-                    <div class="generating-text">Gerando sua arte</div>
-                </div>
-            </div>
-            <!-- result state -->
-            <div id="resultState" class="state-container result-state hidden">
-                <div class="image-frame" id="imageFrame">
-                    <img id="generatedImage" class="generated-img" alt="imagem gerada">
-                </div>
-                <div class="download-panel">
-                    <a id="downloadLink" class="download-link" download="imagem_gerada.png" href="#">
-                        ⬇️ Baixar PNG
-                    </a>
-                    <span id="resolutionLabel" class="resolution-label">📐 1920 × 1920</span>
-                </div>
-            </div>
+        <div class="offer-r">
+          <a href="https://shop.maisfy.com.br/v2/checkout/H35pdtm4/Tidny8b1" target="_blank" rel="noopener" class="btn btn-primary btn-lg btn-block">Comprar agora
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <div class="trust">
+            <div><i class="tick">✓</i> Download imediato após o pagamento</div>
+            <div><i class="tick">✓</i> Pagamento seguro via plataforma protegida</div>
+            <div><i class="tick">✓</i> Sem assinatura mensal</div>
+            <div><i class="tick">✓</i> Suporte para dúvidas de instalação</div>
+          </div>
+          <p style="font-size:.75rem;color:var(--txt-mute);text-align:center;margin-top:18px">🔒 Ambiente de checkout criptografado<br>O link abre a página de pagamento segura</p>
         </div>
+      </div>
     </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="wrap">
+    <div class="sec-head center rv">
+      <span class="eyebrow"><span class="dot"></span> Dúvidas frequentes</span>
+      <h2>Antes de comprar, <span class="grad-txt">saiba tudo</span></h2>
+    </div>
+    <div class="faq">
+      <div class="faq-item rv">
+        <button class="faq-q">O Âncora funciona sem internet? <span class="ico">+</span></button>
+        <div class="faq-a"><div>Sim. O software é 100% offline: todas as funções rodam no seu computador e nenhum dado é enviado para servidores externos. Internet caiu? Nada para.</div></div>
+      </div>
+      <div class="faq-item rv">
+        <button class="faq-q">Em quais versões do Windows funciona? <span class="ico">+</span></button>
+        <div class="faq-a"><div>Windows 7, 8, 10 e 11. Não há dependência externa nem necessidade de runtime adicional — o arquivo já vem pronto para instalação e uso imediato.</div></div>
+      </div>
+      <div class="faq-item rv">
+        <button class="faq-q">É assinatura mensal? <span class="ico">+</span></button>
+        <div class="faq-a"><div>Não. É pagamento único, sem mensalidade e sem taxa recorrente. Você paga uma vez e usa o software sem limite de tempo.</div></div>
+      </div>
+      <div class="faq-item rv">
+        <button class="faq-q">Preciso criar conta ou me cadastrar em algum lugar? <span class="ico">+</span></button>
+        <div class="faq-a"><div>Não. O Âncora não pede cadastro, não pede e-mail e não pede termos de uso. Você instala e começa a usar.</div></div>
+      </div>
+      <div class="faq-item rv">
+        <button class="faq-q">Como recebo o software após a compra? <span class="ico">+</span></button>
+        <div class="faq-a"><div>A entrega é imediata. Após a confirmação do pagamento você recebe o link de download do arquivo, disponível nas suas compras.</div></div>
+      </div>
+      <div class="faq-item rv">
+        <button class="faq-q">Posso fazer backup e levar para outro computador? <span class="ico">+</span></button>
+        <div class="faq-a"><div>Pode. O recurso de Backup e Restauração exporta e importa todos os seus dados em um arquivo .json com um clique. É ideal para backups regulares e para transferir tudo para outra máquina.</div></div>
+      </div>
+      <div class="faq-item rv">
+        <button class="faq-q">O que está incluído no controle de contas? <span class="ico">+</span></button>
+        <div class="faq-a"><div>Contas bancárias (corrente, poupança, dinheiro) e cartões de crédito. O sistema calcula os saldos automaticamente e estima o valor da fatura mensal do cartão.</div></div>
+      </div>
+      <div class="faq-item rv">
+        <button class="faq-q">O software é pesado? <span class="ico">+</span></button>
+        <div class="faq-a"><div>Não. É leve e rápido, com design responsivo — roda bem até em máquinas simples, sem travar ou pesar o sistema.</div></div>
+      </div>
+      <div class="faq-item rv">
+        <button class="faq-q">E se eu não gostar? <span class="ico">+</span></button>
+        <div class="faq-a"><div>Você tem 7 dias de garantia. Instale, use e confira se corresponde ao que era prometido — se não corresponder, solicite o reembolso.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section>
+  <div class="wrap">
+    <div class="final rv">
+      <h2>Invista na sua organização financeira.<br><span class="grad-txt">Tome as rédeas do seu dinheiro hoje.</span></h2>
+      <p class="lead">Um único pagamento. Um software que funciona no seu computador, guarda os seus dados com você e mostra exatamente onde o dinheiro está indo.</p>
+      <a href="https://shop.maisfy.com.br/v2/checkout/H35pdtm4/Tidny8b1" target="_blank" rel="noopener" class="btn btn-primary btn-lg">Garantir o Âncora 1.0 agora
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <div class="final-badges">
+        <span><i class="tick">✓</i> Entrega imediata</span>
+        <span><i class="tick">✓</i> Pagamento único</span>
+        <span><i class="tick">✓</i> 100% offline</span>
+        <span><i class="tick">✓</i> 7 dias de garantia</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="f-in">
+      <div>
+        <a href="#" class="logo" style="margin-bottom:14px"><span class="logo-mark">⚓</span> Âncora&nbsp;1.0</a>
+        <p>Software de controle financeiro pessoal que roda 100% offline no seu Windows. Privacidade e precisão sem depender de nuvem.</p>
+      </div>
+      <div style="display:flex;gap:60px;flex-wrap:wrap">
+        <div>
+          <h5 style="font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;color:var(--txt-mute);margin-bottom:12px">Navegar</h5>
+          <div class="f-links" style="flex-direction:column;gap:9px">
+            <a href="#recursos">Recursos</a><a href="#demo">Demonstração</a><a href="#comparar">Comparativo</a><a href="#faq">Dúvidas</a>
+          </div>
+        </div>
+        <div>
+          <h5 style="font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;color:var(--txt-mute);margin-bottom:12px">Comprar</h5>
+          <div class="f-links" style="flex-direction:column;gap:9px">
+            <a href="https://shop.maisfy.com.br/v2/checkout/H35pdtm4/Tidny8b1" target="_blank" rel="noopener">Checkout seguro</a>
+            <a href="#oferta">Oferta</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="f-bot">
+      © <span id="year"></span> Âncora 1.0 · Produto digital entregue após confirmação do pagamento. Valores e condições sujeitos ao acabamento da página de checkout.
+    </div>
+  </div>
+</footer>
+
+<!-- STICKY CTA -->
+<div class="sticky-cta" id="stickyCta">
+  <div class="sc-info">
+    <div class="sc-price">R$ 119,90<em>ou 12x de R$ 9,99</em></div>
+  </div>
+  <a href="https://shop.maisfy.com.br/v2/checkout/H35pdtm4/Tidny8b1" target="_blank" rel="noopener" class="btn btn-primary" style="padding:15px 30px">Comprar agora ⚓</a>
 </div>
 
 <script>
-    (function() {
-        // API endpoint from user provided Cloudflare Worker
-        const API_ENDPOINT = "https://imagens.rcruzoe4.workers.dev/v1/images/generations";
-        
-        // DOM elements
-        const promptInput = document.getElementById('promptTextarea');
-        const charCounterSpan = document.getElementById('charCounter');
-        const generateBtn = document.getElementById('generateBtn');
-        const errorBox = document.getElementById('errorBox');
-        const errorMsgSpan = document.getElementById('errorMsg');
-        const ratioBtns = document.querySelectorAll('.ratio-btn');
-        const emptyStateDiv = document.getElementById('emptyState');
-        const skeletonStateDiv = document.getElementById('skeletonState');
-        const resultStateDiv = document.getElementById('resultState');
-        const generatedImage = document.getElementById('generatedImage');
-        const downloadLink = document.getElementById('downloadLink');
-        const resolutionSpan = document.getElementById('resolutionLabel');
-        const skeletonBox = document.getElementById('skeletonBox');
+(function(){
+'use strict';
+const CHECKOUT = "https://shop.maisfy.com.br/v2/checkout/H35pdtm4/Tidny8b1";
 
-        let selectedRatio = "1:1";
-        let currentBase64 = "";
+/* ---------- ano ---------- */
+document.getElementById('year').textContent = new Date().getFullYear();
 
-        function updateCharacterCounter() {
-            const len = promptInput.value.length;
-            charCounterSpan.innerText = `${len} car. ✍️`;
-        }
+/* ---------- CTA tracking único ---------- */
+document.querySelectorAll('a[href^="'+CHECKOUT+'"]').forEach(a=>{
+  a.addEventListener('click',function(){ window.dataLayer = window.dataLayer || []; window.dataLayer.push({event:'cta_click',location:a.closest('.sticky-cta')?'sticky':(a.closest('footer')?'footer':'body')}); });
+});
 
-        function setActiveRatio(ratio) {
-            ratioBtns.forEach(btn => {
-                const r = btn.getAttribute('data-ratio');
-                const svgRect = btn.querySelector('svg rect');
-                if (r === ratio) {
-                    btn.classList.add('active');
-                    if (svgRect) {
-                        svgRect.setAttribute('fill', 'rgba(91,143,255,0.25)');
-                        svgRect.setAttribute('stroke', '#5b8fff');
-                    }
-                } else {
-                    btn.classList.remove('active');
-                    if (svgRect) {
-                        svgRect.setAttribute('fill', 'rgba(255,255,255,0.06)');
-                        svgRect.setAttribute('stroke', 'rgba(255,255,255,0.25)');
-                    }
-                }
-            });
-        }
+/* ---------- partículas de fundo ---------- */
+(function(){
+  const c=document.getElementById('particles'),x=c.getContext('2d');
+  let W,H,pts=[],connected=false;
+  function resize(){ W=c.width=innerWidth; H=c.height=innerHeight; build(); }
+  function build(){
+    const n=Math.min(62,Math.round(W*H/26000));
+    pts=Array.from({length:n},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.6+.5,vx:(Math.random()-.5)*.22,vy:(Math.random()-.5)*.22,a:Math.random()*.35+.12}));
+    connected = n>28;
+  }
+  function loop(){
+    x.clearRect(0,0,W,H);
+    for(const p of pts){
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.x<0||p.x>W) p.vx*=-1;
+      if(p.y<0||p.y>H) p.vy*=-1;
+      x.beginPath(); x.arc(p.x,p.y,p.r,0,6.283); x.fillStyle='rgba(34,211,167,'+p.a+')'; x.fill();
+    }
+    if(connected){
+      for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){
+        const dx=pts[i].x-pts[j].x, dy=pts[i].y-pts[j].y, d=Math.hypot(dx,dy);
+        if(d<128){ x.beginPath(); x.moveTo(pts[i].x,pts[i].y); x.lineTo(pts[j].x,pts[j].y);
+          x.strokeStyle='rgba(56,189,248,'+(0.075*(1-d/128))+')'; x.lineWidth=1; x.stroke(); }
+      }
+    }
+    requestAnimationFrame(loop);
+  }
+  addEventListener('resize',resize,{passive:true});
+  if(!matchMedia('(prefers-reduced-motion: reduce)').matches){ resize(); loop(); }
+  else { c.style.display='none'; }
+})();
 
-        ratioBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                const ratio = btn.getAttribute('data-ratio');
-                selectedRatio = ratio;
-                setActiveRatio(ratio);
-            });
+/* ---------- reveal on scroll ---------- */
+const io=new IntersectionObserver((entries)=>{
+  entries.forEach((e,i)=>{ if(e.isIntersecting){ setTimeout(()=>e.target.classList.add('in'), i*70); io.unobserve(e.target); } });
+},{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+
+/* ---------- contadores ---------- */
+const cio=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting) return;
+    cio.unobserve(e.target);
+    const el=e.target, to=parseFloat(el.dataset.to), pre=el.dataset.prefix||'';
+    const dur=1500, t0=performance.now();
+    (function tick(now){
+      const p=Math.min((now-t0)/dur,1), eased=1-Math.pow(1-p,3), v=to*eased;
+      el.textContent = pre + v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+      if(p<1) requestAnimationFrame(tick);
+    })(t0);
+  });
+},{threshold:.4});
+document.querySelectorAll('.count').forEach(el=>cio.observe(el));
+
+/* ---------- barras do demo ---------- */
+const bio=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting) return;
+    bio.unobserve(e.target);
+    setTimeout(()=>{ e.target.style.width = e.target.dataset.w + '%'; }, 120);
+  });
+},{threshold:.35});
+document.querySelectorAll('.bar-fill').forEach(el=>bio.observe(el));
+
+/* ---------- donut ---------- */
+(function(){
+  const cv=document.getElementById('donut'); if(!cv) return;
+  const ctx=cv.getContext('2d'), S=380, R=140, r=92, cx=S/2, cy=S/2;
+  const data=[[41,'#22d3a7'],[26,'#38bdf8'],[13,'#818cf8'],[12,'#f5b942'],[8,'#fb7185']];
+  const dio=new IntersectionObserver(en=>{
+    en.forEach(e=>{
+      if(!e.isIntersecting) return; dio.unobserve(cv);
+      const t0=performance.now(), dur=1400;
+      (function loop(now){
+        const p=Math.min((now-t0)/dur,1), e2=1-Math.pow(1-p,3);
+        ctx.clearRect(0,0,S,S);
+        let a=-Math.PI/2;
+        data.forEach(([v,c])=>{
+          const ang=(v/100)*Math.PI*2*e2;
+          ctx.beginPath(); ctx.arc(cx,cy,R,a,a+ang); ctx.strokeStyle=c; ctx.lineWidth=48; ctx.lineCap='butt'; ctx.stroke(); a+=ang;
         });
+        ctx.font='700 44px Sora, sans-serif'; ctx.fillStyle='#e8edf6'; ctx.textAlign='center'; ctx.textBaseline='middle';
+        ctx.fillText('R$ 3.921',cx,cy-10);
+        ctx.font='600 19px Inter, sans-serif'; ctx.fillStyle='#94a3b8';
+        ctx.fillText('gastos no mês',cx,cy+24);
+        if(p<1) requestAnimationFrame(loop);
+      })(t0);
+    });
+  },{threshold:.4});
+  dio.observe(cv);
+})();
 
-        function setLoading(isLoading) {
-            if (isLoading) {
-                generateBtn.classList.add('loading');
-                generateBtn.disabled = true;
-                emptyStateDiv.classList.add('hidden');
-                resultStateDiv.classList.add('hidden');
-                skeletonStateDiv.classList.remove('hidden');
-                updateSkeletonDimensions();
-            } else {
-                generateBtn.classList.remove('loading');
-                generateBtn.disabled = false;
-            }
-        }
+/* ---------- gráfico do mockup ---------- */
+(function(){
+  const cv=document.getElementById('mockChart'); if(!cv) return;
+  const ctx=cv.getContext('2d');
+  const rec=[4200,5100,4700,6200,5800,7100,6600,7800,7350,8200,7900,9100];
+  const des=[5100,4800,5300,4900,5600,5200,5900,5400,6100,5700,6300,6000];
+  let W,H,anim=0,raf=null,visible=false;
+  const oio=new IntersectionObserver(en=>{ en.forEach(e=>{ visible=e.isIntersecting; if(visible&&!raf) raf=requestAnimationFrame(draw); }); },{threshold:.1});
+  oio.observe(cv);
+  function size(){ const r=cv.getBoundingClientRect(); W=cv.width=r.width*devicePixelRatio; H=cv.height=r.height*devicePixelRatio; }
+  function draw(){
+    if(!W) size();
+    const t0=performance.now();
+    (function loop(now){
+      anim=Math.min((now-t0)/1600,1);
+      const e=1-Math.pow(1-anim,3);
+      ctx.setTransform(1,0,0,1,0,0);
+      ctx.clearRect(0,0,W,H);
+      ctx.scale(devicePixelRatio,devicePixelRatio);
+      const w=W/devicePixelRatio, h=H/devicePixelRatio, pad=8, max=10000;
+      const bw=(w-pad*2)/rec.length*0.58, gap=(w-pad*2)/rec.length;
+      // grid
+      ctx.strokeStyle='rgba(255,255,255,.05)'; ctx.lineWidth=1;
+      for(let i=1;i<4;i++){ const y=pad+(h-pad*2)*i/4; ctx.beginPath(); ctx.moveTo(pad,y); ctx.lineTo(w-pad,y); ctx.stroke(); }
+      rec.forEach((v,i)=>{
+        const bh=(v/max)*(h-pad*2)*e, dh=(des[i]/max)*(h-pad*2)*e, x=pad+gap*i+gap*0.2;
+        ctx.fillStyle='rgba(34,211,167,.28)';
+        ctx.fillRect(x,h-pad-bh,bw,bh);
+        ctx.fillStyle='rgba(251,113,133,.55)';
+        ctx.fillRect(x+bw+2,h-pad-dh,bw,dh);
+      });
+      if(anim<1) raf=requestAnimationFrame(loop); else raf=null;
+    })(t0);
+  }
+  addEventListener('resize',()=>{ size(); if(!raf&&visible) raf=requestAnimationFrame(draw); },{passive:true});
+})();
 
-        function updateSkeletonDimensions() {
-            if (!skeletonBox) return;
-            skeletonBox.classList.add('shimmer');
-            if (selectedRatio === '1:1') {
-                skeletonBox.style.aspectRatio = '1 / 1';
-                skeletonBox.style.width = '70%';
-                skeletonBox.style.maxWidth = '460px';
-            } else if (selectedRatio === '9:16') {
-                skeletonBox.style.aspectRatio = '9 / 16';
-                skeletonBox.style.width = '50%';
-                skeletonBox.style.maxWidth = '280px';
-            } else if (selectedRatio === '16:9') {
-                skeletonBox.style.aspectRatio = '16 / 9';
-                skeletonBox.style.width = '85%';
-                skeletonBox.style.maxWidth = '760px';
-            }
-        }
+/* ---------- FAQ accordion ---------- */
+document.querySelectorAll('.faq-q').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const item=btn.parentElement, body=item.querySelector('.faq-a'), open=item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(o=>{
+      o.classList.remove('open');
+      o.querySelector('.faq-a').style.maxHeight='0px';
+    });
+    if(!open){ item.classList.add('open'); body.style.maxHeight = body.scrollHeight+'px'; }
+  });
+});
 
-        function showError(msg) {
-            errorMsgSpan.innerText = msg;
-            errorBox.classList.add('show');
-            setTimeout(() => {
-                errorBox.classList.remove('show');
-            }, 5000);
-        }
-
-        function clearError() {
-            errorBox.classList.remove('show');
-            errorMsgSpan.innerText = '';
-        }
-
-        function getResolutionText(ratio) {
-            if (ratio === '1:1') return '📐 1920 × 1920';
-            if (ratio === '9:16') return '📱 1080 × 1920';
-            if (ratio === '16:9') return '🖥️ 1920 × 1080';
-            return '📐 1920 × 1920';
-        }
-
-        async function generateImage() {
-            const promptText = promptInput.value.trim();
-            if (!promptText) {
-                showError('✨ Ops! Descreva sua imagem primeiro ✨');
-                return;
-            }
-            clearError();
-            setLoading(true);
-            try {
-                const payload = {
-                    prompt: promptText,
-                    ratio: selectedRatio
-                };
-                const response = await fetch(API_ENDPOINT, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer 0001'
-                    },
-                    body: JSON.stringify(payload)
-                });
-                if (!response.ok) {
-                    let errMsg = `Erro ${response.status}`;
-                    try {
-                        const errJson = await response.json();
-                        errMsg = errJson.message || errMsg;
-                    } catch(e) {}
-                    throw new Error(errMsg);
-                }
-                const data = await response.json();
-                if (data && data.data && data.data[0] && data.data[0].b64_json) {
-                    const b64 = data.data[0].b64_json;
-                    currentBase64 = b64;
-                    const imageSrc = `data:image/png;base64,${b64}`;
-                    generatedImage.src = imageSrc;
-                    downloadLink.href = imageSrc;
-                    resolutionSpan.innerText = getResolutionText(selectedRatio);
-                    emptyStateDiv.classList.add('hidden');
-                    skeletonStateDiv.classList.add('hidden');
-                    resultStateDiv.classList.remove('hidden');
-                } else {
-                    throw new Error('Formato inesperado da API');
-                }
-            } catch (err) {
-                console.error(err);
-                showError(`💥 Falha: ${err.message}`);
-                emptyStateDiv.classList.remove('hidden');
-                skeletonStateDiv.classList.add('hidden');
-                resultStateDiv.classList.add('hidden');
-            } finally {
-                setLoading(false);
-            }
-        }
-
-        function handleKeyDown(e) {
-            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-                e.preventDefault();
-                generateImage();
-            }
-        }
-
-        promptInput.addEventListener('input', () => {
-            updateCharacterCounter();
-            clearError();
-        });
-        generateBtn.addEventListener('click', generateImage);
-        document.addEventListener('keydown', handleKeyDown);
-        
-        updateCharacterCounter();
-        setActiveRatio('1:1');
-        console.log('✨ Magic Image Studio ready | endpoint:', API_ENDPOINT);
-    })();
+/* ---------- nav + sticky CTA ---------- */
+const nav=document.getElementById('nav'), sc=document.getElementById('stickyCta'), offer=document.getElementById('oferta');
+let lastY=0;
+function onScroll(){
+  const y=scrollY;
+  nav.classList.toggle('stuck', y>12);
+  const past = y > innerHeight*0.85;
+  const nearEnd = y + innerHeight > document.body.scrollHeight - 420;
+  sc.classList.toggle('show', past && !nearEnd && y>lastY);
+  document.body.classList.toggle('has-sticky', sc.classList.contains('show'));
+  lastY=y;
+}
+addEventListener('scroll',onScroll,{passive:true}); onScroll();
+})();
 </script>
 </body>
 </html>
